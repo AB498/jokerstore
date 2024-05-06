@@ -1,4 +1,4 @@
-// npm i -g express jsonwebtoken cookie-parser sequelize cors express multer sqlite3
+// npm i -g express jsonwebtoken cookie-parser sequelize cors express multer sqlite3 dotenv
 let globalState = {};
 let child_process = require("child_process");
 let { spawn } = child_process;
@@ -12,6 +12,8 @@ const { join } = path;
 const cors = require("cors");
 const express = require("express");
 const multer = require("multer");
+
+require('dotenv').config();
 
 function uuid() {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
@@ -309,6 +311,11 @@ app.post("/api/special/generate-doc", upload.array("files", 10), async (req, res
   req.body = !req.body.bodyString ? req.body : JSON.parse(req.body.bodyString || "{}");
   let processedFiles = req.files?.map(processFileForFileName) || [];
 
+  // base name
+  let imageFiles = processedFiles.map((f) => {
+    return f.replace(/^.*[\\\/]/, "");
+  });
+
   let { slug, guestUser, id, stringMap, imageMap } = req.body;
 
   let newProcess = new models.DocumentState({
@@ -321,13 +328,23 @@ app.post("/api/special/generate-doc", upload.array("files", 10), async (req, res
 
   let doc = id ? await models.Document.findOne({ where: { id } }) : await models.Document.findOne({ where: { slug } });
 
-  processQueue.push(startProcess({ processId: newProcess.id, guestUser, doc, stringMap, imageMap }));
+  processQueue.push(startProcess({ processId: newProcess.id, guestUser, doc, stringMap, imageMap, imageFiles }));
 
   res.json({ processId: newProcess.id });
 });
 app.get("/api/special/get-random-doc", async (req, res) => {
   // random file from results/
   let dirContent = fs.readdirSync(join(__dirname, "results"));
+  // if no files in results/
+  if (dirContent.length == 0) {
+    let image = fs.readFileSync(join(__dirname, "no-image.png"));
+    res.writeHead(200, {
+      "Content-Type": "image/png",
+      "Content-Length": image.length,
+    });
+    res.end(image);
+    return;
+  }
   let fileName = dirContent.filter((f) => f.slice(-4) == ".png")[Math.floor(Math.random() * dirContent.filter((f) => f.slice(-4) == ".png").length)];
   const image = fs.readFileSync(join(__dirname, "results", fileName));
   res.writeHead(200, {
@@ -337,11 +354,11 @@ app.get("/api/special/get-random-doc", async (req, res) => {
   res.end(image);
 });
 
-function startProcess({ processId, guestUser, doc, stringMap, imageMap }) {
+function startProcess({ processId, guestUser, doc, stringMap, imageMap, imageFiles }) {
   return {
     id: uuid(),
     status: "queued",
-    data: { processId, guestUser, doc, stringMap, imageMap },
+    data: { processId, guestUser, doc, stringMap, imageMap, imageFiles },
     run: async () => {
       // let res = "results/" + uuid() + ".png";
 
@@ -350,10 +367,10 @@ function startProcess({ processId, guestUser, doc, stringMap, imageMap }) {
           template: doc.slug + ".docx",
           stringMap,
           imageMap,
-          files: ["no-image.png", "no-image.png"],
+          files: imageFiles,
         },
       });
-      let fname = await execjs(["python", "docGenerate.py", arg1]);
+      let fname = await execjs(["python3", "docGenerate.py", arg1]);
       let res = { fileName: fname };
       // await new Promise((r) => setTimeout(() => r(), 1000));
       return res;

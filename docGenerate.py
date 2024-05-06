@@ -1,3 +1,5 @@
+# pip install request spire.doc pillow psutil
+
 import requests
 import subprocess
 import re

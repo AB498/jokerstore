@@ -285,7 +285,7 @@ let GeneratorPage = () => {
   let paymentProgress = reactive({ progress: 0, status: "unstarted" });
 
   async function generateAndShow() {
-    if(!doc.current){
+    if (!doc.current) {
       console.log("no doc");
       alertify.error("No document selected");
       return;
@@ -309,8 +309,10 @@ let GeneratorPage = () => {
       for (let i = 0; i < doc.current.data.images.length; i++) {
         let img = doc.current.data.images[i];
         imageMap[i] = img.target_index;
-        formData.append("files", document.querySelector(".form-input." + img.input_name).files[0]);
+        console.log((document.querySelector(".form-input." + img.input_name).files[0]))
+        formData.append("files", (document.querySelector(".form-input." + img.input_name).files[0]) || await downImage('no-image.png'));
       }
+
       if (errors) {
         generationProgress.current = { progress: 0, status: "unstarted" };
         alertify.error("Please fill all required fields");
@@ -754,7 +756,7 @@ let GeneratorPage = () => {
                   );
                 else if (generationProgress.current.status == "failed") return <div class="w-full h-full rounded center text-xl">Preview Not Available!</div>;
                 else if (generationProgress.current.status == "completed")
-                  return <img src={state.current.resultUrl || "no-image.png"} alt="" className="h-64 object-contain rounded overflow-hidden" />;
+                  return <img src={state.current.resultUrl} alt="" className="h-64 object-contain rounded overflow-hidden" />;
                 else
                   return state.current.previewImage ? (
                     <img src={state.current.previewImage} alt="" className="h-64 object-contain rounded overflow-hidden" />
