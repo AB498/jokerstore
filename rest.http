@@ -1,0 +1,54 @@
+POST https://api.hoodpay.io/v1/businesses/15732/payments
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE2OTg0IiwiZXhwIjoyMDMwMzQ4NDcwfQ.7KT7nrdqTwOxsLOw7G54QPW62y8nZWsZpjCCratCmcc
+
+{
+    "name":"TEST 1 Document Photo",
+    "description":"Buying 1 Document Photo",
+    "currency":"USD",
+    "amount": 10,
+    "redirectUrl":"https://ab498.pythonanywhere.com/idgenerator/www",
+}
+###
+http://localhost/api/models/documentstate
+###
+http://localhost/api/models/documentstate/1213
+
+###
+POST http://localhost/api/special/generate-doc
+Content-Type: application/json
+
+{
+    "slug": "uk_dl",
+    "stringMap": {
+        "SURNAME": "John Doe",
+        "DOB": "01/01/1970"
+    },
+    "imageMap": {
+        "0": 0,
+        "1": 1
+    }
+}
+
+
+###
+GET http://localhost/api/special/generate-doc-status/1
+###
+GET http://localhost/api/special/generate-doc-result/1
+###
+GET http://localhost/api/special/get-payment-url/1
+###
+GET http://localhost/api/special/get-random-doc
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###

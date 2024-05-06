@@ -1,0 +1,14 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules",
+    "static/**/*"
+  ],
+  "exec": "node backend/index.js",
+  "watch": [
+    "**/*.js",
+    "**/*.json"
+  ],
+  "ext": "js,json"
+}

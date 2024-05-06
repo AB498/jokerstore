@@ -1,0 +1,396 @@
+body {
+  font-family: "Gabarito", sans-serif;
+}
+.radio-switch {
+  background: #d1d5db;
+  border-radius: 9999px;
+  display: flex;
+  padding: 0.25rem;
+
+  position: relative;
+}
+
+.radio-switch__label {
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  z-index: 1;
+  color: #2c2a2a;
+}
+
+.radio-switch__label--selected {
+  color: #fff;
+}
+
+.radio-switch__input {
+  display: none;
+}
+
+.radio-switch__selected {
+  background: #3b82f6;
+  border-radius: 9999px;
+  position: absolute;
+  top: 0.25rem;
+  bottom: 0.25rem;
+  transition-duration: 200ms;
+  transition-property: transform, width;
+}
+.rotate-360-parent:hover > .rotate-360 {
+  transform: rotate(360deg);
+  transition: all 0.5s ease-in-out;
+}
+
+:root {
+  --color-btn-primary: #ffffff;
+  --color-btn-secondary: #dbdbdb;
+  --color-border-primary: #7c7c7c;
+  --color-border-secondary: #5f5f5f;
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #dfffff;
+  --color-bg-tertiary: #e0e0e0;
+  --color-text-primary: #000005;
+  --color-text-secondary: #646464;
+  --color-success: 0 200 81;
+  --color-info: 51 181 229;
+  --color-warn: 255 187 51;
+  --color-error: 254 78 78;
+}
+
+.dark {
+  --color-btn-primary: rgb(17, 17, 17);
+  --color-btn-secondary: rgb(31, 27, 27);
+  --color-border-secondary: #7c7c7c;
+  --color-border-primary: #5f5f5f;
+  --color-bg-primary: #000000;
+  --color-bg-secondary: #0f0f0f;
+  --color-bg-tertiary: #222121;
+  --color-text-primary: #afffff;
+  --color-text-secondary: #646464;
+  --color-success: 0 200 81;
+  --color-info: 51 181 229;
+  --color-warn: 255 187 51;
+  --color-error: 254 78 78;
+}
+
+body {
+  font-family: "Gabarito", Arial, Helvetica, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.full {
+  width: 100%;
+  height: 100%;
+}
+.special-disabled{
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+    color: #7c7c7c;
+    border: 1px solid #7c7c7c;
+    background-color: #e0e0e0;
+    text-decoration: line-through;
+    text-decoration-color: #7c7c7c;
+}
+.special-link {
+  color: rgb(54, 28, 255);
+  padding: 5px;
+  cursor: pointer;
+  margin: 5px;
+  position: relative;
+}
+.special-link.special-active::before {
+  width: calc(100%);
+  border-bottom: 2px solid rgb(255, 70, 70);
+}
+.special-border {
+  border: 1px solid rgb(70, 209, 255);
+  border-radius: 5px;
+  padding: 5px;
+  background-color: rgba(70, 209, 255, 0.1);
+}
+
+.special-link::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 2px;
+  transition: width 0.3s ease-in-out;
+  border-bottom: 2px dotted rgb(70, 209, 255);
+}
+.special-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background-color: rgb(70, 209, 255);
+  transition: width 0.3s ease-in-out;
+}
+
+.special-link:hover::after {
+  width: calc(100%);
+}
+
+.special-btn {
+  background-color: var(--color-btn-primary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 5px;
+  padding: 7px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  gap: 5px;
+  display: inline-flex;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.special-btn:hover {
+  background-color: var(--color-btn-secondary);
+}
+
+.special-btn:active {
+  outline: 2px solid var(--color-btn-secondary);
+  background-color: var(--color-btn-primary);
+}
+
+.special-title {
+  display: block;
+  width: 100%;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--color-text-primary);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.special-title:hover {
+  color: var(--color-text-secondary);
+  text-decoration: underline;
+}
+
+.special-input {
+  background-color: var(--color-btn-primary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 5px;
+  padding: 7px 15px;
+  transition: background-color 0.3s ease;
+  font-size: 14px;
+}
+
+.special-input:hover {
+  /* background-color: var(--color-btn-secondary); */
+}
+
+.special-input:active {
+  background-color: var(--color-btn-primary);
+  outline: 3px solid var(--color-btn-secondary);
+}
+
+.card {
+  background-color: var(--color-bg-primary);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 1px solid var(--color-border-primary);
+  padding: 10px;
+}
+
+.card-body {
+  padding: 10px 10px 10px 10px;
+}
+
+.card-footer {
+  display: flex;
+  padding: 10px;
+  font-size: 14px;
+  gap: 5px;
+}
+
+.vr {
+  display: inline;
+  height: 100%;
+  width: 1px;
+  border: 1px inset;
+  margin: 5px;
+}
+
+.max-w-500 {
+  max-width: 500px;
+}
+
+.special {
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 22px;
+  margin: 5px;
+  display: flex;
+  direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 300px;
+  height: 200px;
+}
+
+.special:hover {
+  background-color: var(--color-primary);
+}
+
+.hover-effect {
+  cursor: pointer;
+}
+
+.hover-effect:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.hover-effect-secondary {
+  cursor: pointer;
+}
+
+.hover-effect-secondary:hover {
+  cursor: pointer;
+  background-color: var(--color-bg-primary);
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.25em 0.4em;
+  font-size: 75%;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-primary);
+  margin: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.loading {
+  position: absolute;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.15) 50%, rgba(0, 0, 0, 0.1) 70%, rgba(0, 0, 0, 0.1) 80%, rgba(0, 0, 0, 0) 100%);
+  animation: gradientMove 2s linear infinite;
+  background-size: 200% 100%;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 100% 0%;
+  }
+
+  100% {
+    background-position: -100% 0%;
+  }
+}
+
+/* Loading animation styles */
+.loading::after {
+  content: "";
+  border: 4px solid rgba(255, 255, 255, 0.7);
+  border-top: 4px solid #7300ff;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+}
+
+/* Define the spin animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.quick-loading {
+  position: relative;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-loading::after {
+  z-index: 9999;
+  position: absolute;
+  content: "";
+  border: 4px solid rgba(255, 255, 255, 0.7);
+  border-top: 4px solid #7300ff;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+}
+
+.quick-loading::before {
+  z-index: 9998;
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.15) 50%, rgba(0, 0, 0, 0.1) 70%, rgba(0, 0, 0, 0.1) 80%, rgba(0, 0, 0, 0) 100%);
+  animation: gradientMove 2s linear infinite;
+  background-size: 200% 100%;
+}
+
+/* remove tailwind default
+input[type="text"] {
+  outline: none;
+} */

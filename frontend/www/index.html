@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" href="https://cdn.simpleicons.org/json/red" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <link rel="stylesheet" href="index.css" />
+
+    <!-- fontawesome faltui alert simplebar gsap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet"
+        href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/vendor/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/alertify.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/css/alertify.css" />
+    <link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.css" />
+    <script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+
+    <link href="https://unpkg.com/tabulator-tables@6.2.0/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@6.2.0/dist/js/tabulator.min.js"></script>
+
+    <script src="http://chancejs.com/chance.min.js"></script>
+
+    <!-- react -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router-dom/5.3.4/react-router-dom.js"></script>
+
+
+    <script type="module">
+        import { JSONEditor } from "https://cdn.jsdelivr.net/npm/vanilla-jsoneditor/standalone.js";
+        window.JSONEditor = JSONEditor;
+    </script>
+
+    <!-- tailwindcss -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            preflights: false,
+        };
+    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.0/dist/floating-ui.core.umd.js"></script>
+<script src="https://unpkg.com/@floating-ui/dom@1.6.3/dist/floating-ui.dom.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@floating-ui/react-dom@2.0.4/dist/floating-ui.react-dom.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@floating-ui/react@0.26.9/dist/floating-ui.react.umd.js"></script>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+
+
+    <!-- supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+
+<body oncontextmenu="return false">
+    <script src="utils.js"></script>
+
+    <div class="loader quick-loading fixed top-0 left-0 right-0 bottom-0 w-screen h-screen"></div>
+    <div id="root" class=""></div>
+    <script>
+        let loader = document.querySelector(".loader");
+        loader.classList.toggle(localStorage.theme == "dark" ? "bg-black" : "bg-white");
+        darkModeSwitch(localStorage.theme == "dark" ? true : false);
+        window.addEventListener("appReady", (e) => {
+            loader.style.display = "none";
+        })
+    </script>
+
+
+    <!-- babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- <script type="module">
+    if (!localStorage.babelScript) localStorage.babelScript = await (await fetch("https://unpkg.com/@babel/standalone/babel.min.js")).text();
+    let scriptEl = document.createElement("script");
+    scriptEl.innerHTML = localStorage.babelScript;
+    document.body.appendChild(scriptEl);
+    </script> -->
+    <script type="text/babel" src="react_specific.jsx"></script>
+
+    <script type="text/babel" src="main.jsx">
+
+    </script>
+</body>
+
+</html>
