@@ -39,7 +39,7 @@ const DocumentState = sequelize.define("DocumentState", {
   paymenturl: DataTypes.STRING,
   paymentstatus: DataTypes.STRING,
   result: JSONObjectType("result"),
-  errors: StringArrayType("errors"),
+  error: StringArrayType("error"),
 });
 
 const Document = sequelize.define("Document", {

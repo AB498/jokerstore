@@ -92,7 +92,7 @@ def get_replaced_id(body, up_files):
                 continue
             img_file = up_files[int(key)]
 
-            print(os.path.join(calling_dir, "backend/uploads/", img_file), file=sys.stderr)
+            # print(os.path.join(calling_dir, "backend/uploads/", img_file), file=sys.stderr)
             picture.LoadImage(os.path.join(calling_dir, "backend/uploads/", img_file))
             picture.Width, picture.Height = w, h
             # print(picture.Width, picture.Height)
@@ -126,6 +126,7 @@ def get_replaced_id(body, up_files):
     
     except Exception as e:
         print(e, file=sys.stderr)
+        raise e
 
 
 def fileAsBytes(file_path):

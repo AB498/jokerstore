@@ -11,19 +11,19 @@ const path = require("path");
 const { join } = path;
 const cors = require("cors");
 const express = require("express");
-const multer = require("multer");
 
 var BASE_URL = "https://jokers.digital";
 
 require('dotenv').config();
 
-// host 0.0.0.0 process.env.PORT || 3000
+// host 0.0.0.0 proc.env.PORT || 3000
 let port = ((process.env.HTTPS == 1) ? 443 : 80);
 
 const http = require("http");
 const https = require("https");
 
 const app = express();
+const multer = require("multer");
 
 const server = process.env.HTTPS ? https.createServer({
   key: fs.readFileSync("/etc/letsencrypt/live/jokers.digital/privkey.pem"),
@@ -213,8 +213,11 @@ app.get("/api/special/generate-doc-result/:id", async (req, res) => {
   if (!existingProcess) return res.json({ error: "Process Doesnt Exist" });
   if (existingProcess.status != "completed") return res.json(existingProcess.get({ plain: true }));
 
-  let { fileName } = (await existingProcess.get({ plain: true })).result;
+  let { fileName, error } = (await existingProcess.get({ plain: true })).result;
 
+  if (error) {
+    return res.json({ error });
+  }
   const image = fs.readFileSync(join(__dirname, "results", fileName));
   res.writeHead(200, {
     "Content-Type": "image/png",
@@ -229,6 +232,11 @@ app.get("/api/special/generate-doc-status/:id", async (req, res) => {
       id,
     },
   });
+
+
+  if (existingProcess.error) {
+    return res.json(existingProcess.get({ plain: true }));
+  }
   if (!existingProcess) return res.json({ error: "Process Doesnt Exist" });
 
   res.json(await existingProcess.get({ plain: true }));
@@ -390,8 +398,9 @@ function startProcess({ processId, guestUser, doc, stringMap, imageMap, imageFil
           files: imageFiles,
         },
       });
-      let fname = await execjs(["python3", "docGenerate.py", arg1]);
-      let res = { fileName: fname };
+      let { result: fname, error: error } = await execjs(["python3", "docGenerate.py", arg1]);
+
+      let res = { fileName: fname, error };
       // await new Promise((r) => setTimeout(() => r(), 1000));
       return res;
     },
@@ -434,9 +443,10 @@ async function processExecutor() {
   await poll(async () => {
     processQueue.length && console.log("Processes in queue", processQueue.length);
     if (!processQueue.length) return;
-    let process = processQueue.pop();
-    let res = await process.run();
-    models.DocumentState.update({ status: "completed", result: res }, { where: { id: process.data.processId } });
+    let proc = processQueue.pop();
+    let res = await proc.run();
+    models.DocumentState.update({ status: "completed", result: res, error: res.error }, { where: { id: proc.data.processId } });
+    console.log("Process completed", proc.data.processId, res);
     return false;
   }, 1000);
 }
@@ -493,21 +503,21 @@ function execjs(cmds, logcallback) {
   return new Promise((resolve, reject) => {
     let out = "";
     let err = "";
-    process = spawn(cmds[0], cmds.slice(1));
-    process.stdout.on("data", (data) => {
+    proc = spawn(cmds[0], cmds.slice(1));
+    proc.stdout.on("data", (data) => {
       out += data.toString();
       logcallback && logcallback(data.toString());
       // console.log(data.toString());
     });
-    process.stderr.on("data", (data) => {
+    proc.stderr.on("data", (data) => {
       err += data.toString();
       logcallback && logcallback(data.toString());
       console.log("Err", data.toString());
     });
-    process.on("close", (code) => {
-      // console.log(`child process exited with code ${code}`);
-      if (code == 0) resolve(out.replace(/[\n\r]*$/, ""));
-      else reject(err);
+    proc.on("close", (code) => {
+      // console.log(`child proc exited with code ${code}`);
+      if (code == 0) resolve({ result: out.replace(/[\n\r]*$/, ""), error: null });
+      else resolve({ result: out.replace(/[\n\r]*$/, ""), error: err });
     });
   });
 }

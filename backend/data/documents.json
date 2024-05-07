@@ -5,6 +5,26 @@
         "country": "United Kingdom",
         "price": 5,
         "data": {
+            "generatedfields": [
+                {
+                    "input_label": "MRZ1",
+                    "input_placeholder": "MRZ1<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
+                    "input_name": "MRZ1<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
+                    "type": "text",
+                    "value": null,
+                    "required": true,
+                    "resolver": "mrzCalculator1"
+                },
+                {
+                    "input_label": "MRZ2",
+                    "input_placeholder": "MRZ2<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
+                    "input_name": "MRZ2<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
+                    "type": "text",
+                    "value": null,
+                    "required": true,
+                    "resolver": "mrzCalculator2"
+                }
+            ],
             "fields": [
                 {
                     "id": 206,
@@ -138,7 +158,7 @@
                     "id": 190,
                     "input_label": "First Name",
                     "input_placeholder": "Clarkson",
-                    "input_name": "GIWENNAME",
+                    "input_name": "GIVENNAME",
                     "type": "text",
                     "value": null,
                     "required": true,

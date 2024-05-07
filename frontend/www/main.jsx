@@ -291,6 +291,37 @@ let GeneratorPage = () => {
       return;
     }
     generationProgress.current = { progress: 0, status: "running" };
+
+
+    function genMrzFromStringMap(stringMap) {
+      return generateMrz({
+        passport: {
+          mrzType: 'td3',
+          type: 'p',
+          issuingCountry: stringMap.NATIONALITY || 'UK',
+          number: stringMap.PASSPORTNO || ' 11av56868',
+          expirationDate: stringMap.EXPIRY || '11 May 2021 00:00:00 GMT',
+
+        },
+        user: {
+          surname: stringMap.SURNAME || 'Gendre',
+          givenNames: stringMap.GIVENNAME || 'Pierre Joseh Alexandre',
+          nationality: stringMap.NATIONALITY || 'FRA',
+          dateOfBirth: stringMap.DOB || '17 Oct 1986 00:12:00 GMT',
+          sex: (stringMap.SEX?.length == 1 ? (stringMap.SEX == 'M' ? 'male' : 'female') : stringMap.SEX) || 'male'
+        }
+      })
+    }
+    let fieldResolvers = {
+      mrzCalculator1: (stringMap) => {
+        let res = genMrzFromStringMap(stringMap);
+        return res.split('\n')[0];
+      },
+      mrzCalculator2: (stringMap) => {
+        let res = genMrzFromStringMap(stringMap);
+        return res.split('\n')[1];
+      }
+    }
     try {
       let formData = new FormData();
       let stringMap = { SURNAME: "John Doe", DOB: "01/01/1970" };
@@ -305,11 +336,16 @@ let GeneratorPage = () => {
         } else inputEl.parentElement.querySelector(".error").classList.add("hidden");
         if (!item.type || item.type == "text") stringMap[item.input_name] = inputEl.value || item.input_placeholder;
       });
+      doc.current.data.generatedfields?.forEach((item) => {
+        stringMap[item.input_name] = fieldResolvers[item.resolver](stringMap);
+      });
+
+      console.log('stringMap', stringMap);
       let imageMap = {};
       for (let i = 0; i < doc.current.data.images.length; i++) {
         let img = doc.current.data.images[i];
         imageMap[i] = img.target_index;
-        console.log((document.querySelector(".form-input." + img.input_name).files[0]))
+        // console.log((document.querySelector(".form-input." + img.input_name).files[0]))
         formData.append("files", (document.querySelector(".form-input." + img.input_name).files[0]) || await downImage('no-image.png'));
       }
 
@@ -479,14 +515,18 @@ let GeneratorPage = () => {
     try {
       let tmp = await poll(async () => {
         let res = await (await fetch("api/special/generate-doc-status/" + processId)).json();
-        cons("result status", res?.status);
-        if (res?.error) return res;
+        cons("result status", res?.status, res?.result, res?.error);
         return res.status == "completed";
       }, 3000);
 
       if (tmp?.error) throw new Error(tmp.error);
 
-      let result = (await (await fetch("api/special/generate-doc-status/" + processId)).json()).result;
+      let resp = (await (await fetch("api/special/generate-doc-status/" + processId)).json());
+      if (resp.error) {
+        generationProgress.current = { progress: 0, status: "failed" };
+        throw new Error(resp.error);
+      }
+      let result = resp.result;
 
       let resImgData = await getImageDataFromUrl("results/" + result.fileName);
       let overlayImgData = await drawText("PREVIEW");
@@ -676,12 +716,12 @@ let GeneratorPage = () => {
                     <div className="grow"></div>
                     <div className="my-6"></div>
                   </div>
-                  <div className="flex flex-col photo-input basis-full sm:basis-1/3">
+                  <div className="flex flex-col overflow-auto photo-input basis-full sm:basis-1/3">
                     <div className="flex flex-col gap-2 p-2">
                       <div className="font-semibold">Photo</div>
                       <img className="object-contain h-64 rounded upload-image" src="no-image.png" alt="" />
                       <div className="flex gap-2">
-                        <div className="special-btn file-name grow">[No File]</div>
+                        <div className="truncate special-btn file-name grow">[No File]</div>
                         <label className="special-btn">
                           Upload
                           <input
@@ -696,11 +736,11 @@ let GeneratorPage = () => {
                       </div>
                       <div className="special-btn">Random</div>
                     </div>
-                    <div className="flex flex-col gap-2 p-2">
+                    <div className="flex flex-col w-full gap-2 p-2">
                       <div className="font-semibold">Signature</div>
                       <img className="object-contain h-32 rounded upload-image" src="no-image.png" alt="" />
-                      <div className="flex gap-2">
-                        <div className="special-btn file-name grow">[No File]</div>
+                      <div className="flex w-full gap-2">
+                        <div className="truncate special-btn file-name grow">[No File]</div>
                         <label className="special-btn">
                           Upload
                           <input
@@ -757,7 +797,7 @@ let GeneratorPage = () => {
                       <div>Loading...</div>
                     </div>
                   );
-                else if (generationProgress.current.status == "failed") return <div class="w-full h-full rounded center text-xl">Preview Not Available!</div>;
+                else if (generationProgress.current.status == "failed") return <div class="w-full h-full rounded center text-xl">Failed!</div>;
                 else if (generationProgress.current.status == "completed")
                   return <img src={state.current.resultUrl} alt="" className="object-contain h-64 overflow-hidden rounded" />;
                 else

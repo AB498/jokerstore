@@ -133,13 +133,13 @@ const SUPPRESSED_WARNINGS = [
 
 ["error"].forEach(
   (method) =>
-    (console[method] = function filterWarnings(msg, ...args) {
-      try {
-        if (!SUPPRESSED_WARNINGS.some((entry) => msg.includes(entry))) {
-          consoleWarn(msg, ...args);
-        }
-      } catch (e) {}
-    })
+  (console[method] = function filterWarnings(msg, ...args) {
+    try {
+      if (!SUPPRESSED_WARNINGS.some((entry) => msg.includes(entry))) {
+        consoleWarn(msg, ...args);
+      }
+    } catch (e) { }
+  })
 );
 function styleToObject(style) {
   if (!style) return null;
@@ -236,7 +236,7 @@ function allowsInstanceCheck(C) {
 }
 
 function isReactive(obj) {
-  return obj.__isReactive === true;
+  return false; obj.__isReactive === true;
 }
 
 function cons(...args) {
@@ -413,10 +413,10 @@ window.deb_log = (...args) => {
   }
   const src = s
     ? `${s
-        .substr(s.lastIndexOf("/") + 1)
-        .replace(/\:\d+$/, "")
-        .replace(/.*at/, "")
-        .trim()}`
+      .substr(s.lastIndexOf("/") + 1)
+      .replace(/\:\d+$/, "")
+      .replace(/.*at/, "")
+      .trim()}`
     : "<< unknown >>";
 
   // create timestamp for log
@@ -589,7 +589,7 @@ function tryParseJSON(jsonString) {
     if (o && typeof o === "object") {
       return o;
     }
-  } catch (e) {}
+  } catch (e) { }
 
   return false;
 }
