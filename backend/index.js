@@ -228,30 +228,30 @@ app.get("/api/special/get-payment-url/:id", async (req, res) => {
   }
   if (docResult.paymenturl) return res.json(docResult.get({ plain: true }));
 
-  // let result = await fetch("https://api.hoodpay.io/v1/businesses/15732/payments", {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE2OTg0IiwiZXhwIjoyMDMwMzQ4NDcwfQ.7KT7nrdqTwOxsLOw7G54QPW62y8nZWsZpjCCratCmcc"}`,
-  //   },
-  //   body: JSON.stringify({
-  //     name: "TEST 1 Document Photo",
-  //     description: JSON.stringify({ user: docResult.user, id: docResult.id }),
-  //     currency: "USD",
-  //     amount: 10,
-  //     redirectUrl: "http://localhost/results/" + docResult.id,
-  //     notifyUrl: "http://localhost/api/special/notify-payment",
-  //   }),
-  // });
-
-  // let fetchedPaymentInfo = cons(await result.json());
-  fetchedPaymentInfo = {
-    data: {
-      url: "https://checkout.hoodpay.io/e36c6773-20e0-4041-9bbb-174cd0df1418",
-      id: "e36c6773-20e0-4041-9bbb-174cd0df1418",
+  let result = await fetch("https://api.hoodpay.io/v1/businesses/15732/payments", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE2OTg0IiwiZXhwIjoyMDMwMzQ4NDcwfQ.7KT7nrdqTwOxsLOw7G54QPW62y8nZWsZpjCCratCmcc"}`,
     },
-    message: "Payment successfully created",
-  };
+    body: JSON.stringify({
+      name: "TEST 1 Document Photo",
+      description: JSON.stringify({ user: docResult.user, id: docResult.id }),
+      currency: "USD",
+      amount: 10,
+      redirectUrl: "http://localhost/results/" + docResult.id,
+      notifyUrl: "http://localhost/api/special/notify-payment",
+    }),
+  });
+
+  let fetchedPaymentInfo = (await result.json());
+  // fetchedPaymentInfo = {
+  //   data: {
+  //     url: "https://checkout.hoodpay.io/e36c6773-20e0-4041-9bbb-174cd0df1418",
+  //     id: "e36c6773-20e0-4041-9bbb-174cd0df1418",
+  //   },
+  //   message: "Payment successfully created",
+  // };
   docResult.paymenturl = fetchedPaymentInfo.data.url;
   docResult.paymentid = fetchedPaymentInfo.data.id;
   docResult.save();
