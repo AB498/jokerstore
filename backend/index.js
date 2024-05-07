@@ -13,6 +13,8 @@ const cors = require("cors");
 const express = require("express");
 const multer = require("multer");
 
+var BASE_URL = "https://jokers.digital";
+
 require('dotenv').config();
 
 // host 0.0.0.0 process.env.PORT || 3000
@@ -257,8 +259,8 @@ app.get("/api/special/get-payment-url/:id", async (req, res) => {
       description: JSON.stringify({ user: docResult.user, id: docResult.id }),
       currency: "USD",
       amount: 10,
-      redirectUrl: "http://localhost/results/" + docResult.id,
-      notifyUrl: "http://localhost/api/special/notify-payment",
+      redirectUrl: BASE_URL + "/results/" + docResult.id,
+      notifyUrl: BASE_URL + "/api/special/notify-payment",
     }),
   });
 
