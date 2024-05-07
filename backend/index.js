@@ -418,7 +418,7 @@ app.get("*", (req, res) => {
 
 (async () => {
   await models.init();
-  app.listen(port, () => {
+  app.listen(port, '127.0.0.1', () => {
     console.log(`Server is running on port http://localhost:${port}`);
   });
 
