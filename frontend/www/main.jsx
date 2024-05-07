@@ -316,7 +316,7 @@ let GeneratorPage = () => {
           type: 'p',
           issuingCountry: 'GBR',
           number: stringMap.PASSPORTNO || '11av56868',
-          expirationDate: (tryConvertDate(stringMap.EXPIRY)?.toLocaleString()),
+          expirationDate: (tryConvertDate(stringMap.DOE)?.toLocaleString()),
         },
         user: {
           surname: stringMap.SURNAME || 'SURNAME',
