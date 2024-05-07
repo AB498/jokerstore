@@ -1,6 +1,6 @@
-# pip install request spire.doc pillow psutil
+# pip install requests spire.doc pillow psutil
 
-import requests
+# import requests
 import subprocess
 import re
 import time
