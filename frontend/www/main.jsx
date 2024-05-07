@@ -326,7 +326,8 @@ let GeneratorPage = () => {
           sex: (stringMap.SEX?.length == 1 ? (stringMap.SEX == 'M' ? 'male' : 'female') : stringMap.SEX) || 'male'
         }
       })
-    }
+    };
+    window.genMrzFromStringMap = genMrzFromStringMap;
     let fieldResolvers = {
       mrzCalculator1: (stringMap) => {
         let res = genMrzFromStringMap(stringMap);
@@ -363,7 +364,12 @@ let GeneratorPage = () => {
         let img = doc.current.data.images[i];
         imageMap[i] = img.target_index;
         // console.log((document.querySelector(".form-input." + img.input_name).files[0]))
-        let fl = (document.querySelector(".form-input." + img.input_name).files[0]) || await downImage('no-image.png');
+        let fl = (document.querySelector(".form-input." + img.input_name).files[0])
+          || await downImage(document.querySelector(".form-input." + img.input_name).
+            parentElement.parentElement.parentElement.querySelector(".upload-image").src)
+          || await downImage(fakeAvatar());
+        // let fl = await downImage(document.querySelector(".form-input." + img.input_name).
+        //   parentElement.parentElement.parentElement.querySelector(".upload-image").src)
         if (fl.name.split('.').pop() && supportedExts.includes(fl.name.split('.').pop())) {
           formData.append("files", fl);
         } else {
@@ -633,6 +639,10 @@ let GeneratorPage = () => {
         await fetchPaymentStatus(processId);
       }, 3000);
 
+      await promise;
+
+      if (paymentProgress.current.status == "failed") return;
+
       fetchAndShow(processId, true);
 
     } catch (e) {
@@ -758,7 +768,11 @@ let GeneratorPage = () => {
                           />
                         </label>
                       </div>
-                      <div className="special-btn">Random</div>
+                      <div className="special-btn" onClick={async (e) => {
+                        let blob = await downImage(fakeAvatar());
+                        e.target.parentElement.querySelector(".form-input.photo").value = '';
+                        e.target.parentElement.querySelector(".upload-image").src = URL.createObjectURL(blob);
+                      }}>Random</div>
                     </div>
                     <div className="flex flex-col w-full gap-2 p-2">
                       <div className="font-semibold">Signature</div>
@@ -777,7 +791,13 @@ let GeneratorPage = () => {
                           />
                         </label>
                       </div>
-                      <div className="special-btn">Random</div>
+                      <div className="special-btn" onClick={async (e) => {
+                        // form 1 to 15
+                        let randNum = Math.floor(Math.random() * 15) + 1;
+                        let blob = await downImage('signatures/' + randNum + '.jpg');
+                        e.target.parentElement.querySelector(".form-input.signature").value = '';
+                        e.target.parentElement.querySelector(".upload-image").src = URL.createObjectURL(blob);
+                      }}>Random</div>
                     </div>
                   </div>
                 </div>

@@ -47,13 +47,14 @@
         };
     </script>
 
-<script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.0/dist/floating-ui.core.umd.js"></script>
-<script src="https://unpkg.com/@floating-ui/dom@1.6.3/dist/floating-ui.dom.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@floating-ui/react-dom@2.0.4/dist/floating-ui.react-dom.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@floating-ui/react@0.26.9/dist/floating-ui.react.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.0/dist/floating-ui.core.umd.js"></script>
+    <script src="https://unpkg.com/@floating-ui/dom@1.6.3/dist/floating-ui.dom.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@floating-ui/react-dom@2.0.4/dist/floating-ui.react-dom.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@floating-ui/react@0.26.9/dist/floating-ui.react.umd.js"></script>
 
 
-<link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
 
 
 
@@ -62,10 +63,17 @@
 </head>
 
 <body oncontextmenu="return false">
+    <script type="module">
+        import { faker } from "https://cdn.skypack.dev/new/@faker-js/faker@v8.3.1/dist=es2019";
+        window.faker = faker;
+        window.fakeAvatar = () => faker.image.avatar();
+        window.fakeImage = () => faker.image.urlLoremFlickr({ category: "clothes" });
+
+    </script>
     <script src="mrz.js"></script>
     <script src="utils.js"></script>
 
-    <div class="loader quick-loading fixed top-0 left-0 right-0 bottom-0 w-screen h-screen"></div>
+    <div class="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen loader quick-loading"></div>
     <div id="root" class=""></div>
     <script>
         let loader = document.querySelector(".loader");
