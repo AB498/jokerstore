@@ -31,5 +31,4 @@ setInterval(async () => {
     if (res == "Already up to date.") return;
     console.log(git_count, res);
 
-
 }, 5000);
