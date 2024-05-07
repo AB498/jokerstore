@@ -474,7 +474,7 @@ let GeneratorPage = () => {
     });
   }
 
-  async function fetchAndShow(processId) {
+  async function fetchAndShow(processId, withoutOverlay = false) {
     if (!processId) return (state.current.resultUrl = null);
     try {
       let tmp = await poll(async () => {
@@ -490,7 +490,7 @@ let GeneratorPage = () => {
 
       let resImgData = await getImageDataFromUrl("results/" + result.fileName);
       let overlayImgData = await drawText("PREVIEW");
-      let protectedImgData = await overlayImage(resImgData, overlayImgData);
+      let protectedImgData = withoutOverlay ? resImgData : await overlayImage(resImgData, overlayImgData);
 
       state.current.resultUrl = URL.createObjectURL(await ImageDataToBlob(protectedImgData));
 
@@ -568,6 +568,9 @@ let GeneratorPage = () => {
         }
         await fetchPaymentStatus(processId);
       }, 3000);
+
+      fetchAndShow(processId, true);
+
     } catch (e) {
       console.log(e);
       paymentProgress.current = { progress: 0, status: "unstarted" };
