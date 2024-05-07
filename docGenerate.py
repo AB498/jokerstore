@@ -101,7 +101,7 @@ def get_replaced_id(body, up_files):
 
     img = Image.open("ReplaceImage.jpg")
     # crop image to half height from top and bottom
-    img = img.crop((0, img.height // 4, img.width, img.height * 3 // 4))
+    img = img.crop((0, img.height // 4, img.width, img.height * 5 // 6))
     # final_img = "tmp"+new_uuid+".png"
     _, final_img = tempfile.mkstemp(
         suffix=".png",

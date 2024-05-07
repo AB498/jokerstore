@@ -55,8 +55,8 @@ Document.hasMany(DocumentState, { foreignKey: "documentId" });
 
 async function init() {
   // [Document, DocumentState].forEach((model) => model.sync({ alter: true, force: true }));
-  await sequelize.sync({ alter: true, force: true });
-  await populateTables();
+  // await sequelize.sync({ alter: true, force: true });
+  // await populateTables();
 }
 
 module.exports = models = { init, sequelize, Document, DocumentState };

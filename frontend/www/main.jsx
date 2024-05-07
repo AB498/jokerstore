@@ -885,6 +885,7 @@ function renderApp() {
   window.dispatchEvent(new CustomEvent("appReady", { detail: true }));
 }
 
-watchFiles(["/", "main.jsx"], fetchAndReload);
+if (localStorage.debug)
+  watchFiles(["/", "main.jsx"], fetchAndReload);
 
 renderApp();
