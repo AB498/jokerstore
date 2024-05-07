@@ -336,6 +336,7 @@ function processFileForFileName(file) {
 }
 
 app.post("/api/special/generate-doc", upload.array("files", 10), async (req, res) => {
+  console.log("doc generetion", req.body);
   req.body = !req.body.bodyString ? req.body : JSON.parse(req.body.bodyString || "{}");
   let processedFiles = req.files?.map(processFileForFileName) || [];
 
