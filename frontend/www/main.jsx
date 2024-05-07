@@ -29,13 +29,13 @@ let CustomSelect = ({ label, data, onChange, value, className }) => {
 };
 let SearchableList = ({ data, onChange }) => {
   return (
-    <div className="card p-2">
+    <div className="p-2 card">
       <input type="text" className="min-w-[300px] border p-2 bg-neutral-100 dark:bg-neutral-900" placeholder="Search..." />
       <div className="flex flex-col py-2">
         {/* {data?.[0] && typeof data[0] == "string"
           ? data.map((d) => (
               <div
-                className="hover-effect p-2 rounded"
+                className="p-2 rounded hover-effect"
                 onClick={() => {
                   // selected.current = d;
                   onChange(d);
@@ -89,7 +89,7 @@ let CustomPopup = ({ children, render, open = false }) => {
       {children && <children.type {...children.props} ref={refs.setReference} {...getReferenceProps()} />}
       {!!isOpen && (
         <div>
-          {isOpen && <div className="overscroll-auto z-10 fixed w-screen h-screen bg-black/50 top-0 left-0" onClick={() => setIsOpen(false)}></div>}
+          {isOpen && <div className="fixed top-0 left-0 z-10 w-screen h-screen overscroll-auto bg-black/50" onClick={() => setIsOpen(false)}></div>}
           <div className="z-20 flex flex-col max-h-[80vh] " ref={refs.setFloating} style={floatingStyles} {...getFloatingProps()}>
             {render}
           </div>
@@ -152,7 +152,7 @@ let SpecialAccordion = ({ title, children, defaultOpen = false, stylize = false,
   return (
     <div class="tab w-full overflow-hidden shrink-0">
       <label class={"peer " + (stylize ? "flex flex-col cursor-pointer bg-gray-100 text-secondary-900 leading-normal" : "")} for={id}>
-        <div className="peer flex  items-stretch shrink-0">
+        <div className="flex items-stretch peer shrink-0">
           <input class="peer absolute hidden" id={id} type="checkbox" name="tabs" defaultChecked={defaultOpen} onChange={(e) => (open.current = e.target.checked)} />
           {title}
           <div className="grow"></div>
@@ -174,15 +174,15 @@ let Layout = () => {
 
 let Support = () => {
   return (
-    <div className="w-full h-full flex flex-col items-center min-h-screen">
+    <div className="flex flex-col items-center w-full h-full min-h-screen">
       <NavBar />
-      <div className="main flex flex-col w-full full ">
-        <div className="flex flex-col max-w-6xl w-full mx-auto p-4 ">
-          <div className=" text-4xl font-bold text-yellow-500">Support</div>
+      <div className="flex flex-col w-full main full ">
+        <div className="flex flex-col w-full max-w-6xl p-4 mx-auto ">
+          <div className="text-4xl font-bold text-yellow-500 ">Support</div>
           <div className="my-4"></div>
 
           <div className="flex flex-col">
-            <div className="flex items-center gap-2 px-2 text-lg  ">
+            <div className="flex items-center gap-2 px-2 text-lg ">
               <i className="flex fi fi-rr-envelope"></i>
               <div className="font-semibold ">
                 Email:{" "}
@@ -192,7 +192,7 @@ let Support = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 px-2 text-lg  ">
+            <div className="flex items-center gap-2 px-2 text-lg ">
               <i className="flex fi fi-rr-paper-plane"></i>
               <div className="font-semibold ">
                 Telegram:{" "}
@@ -211,11 +211,11 @@ let Support = () => {
 };
 let FAQ = () => {
   return (
-    <div className="w-full h-full flex flex-col items-center min-h-screen">
+    <div className="flex flex-col items-center w-full h-full min-h-screen">
       <NavBar />
-      <div className="main flex flex-col w-full full ">
-        <div className="flex flex-col max-w-6xl w-full mx-auto p-4 ">
-          <div className=" text-4xl font-bold text-yellow-500">F.A.Q</div>
+      <div className="flex flex-col w-full main full ">
+        <div className="flex flex-col w-full max-w-6xl p-4 mx-auto ">
+          <div className="text-4xl font-bold text-yellow-500 ">F.A.Q</div>
           <div className="my-4"></div>
           <div className="flex">
             <div className="flex flex-col gap-4">
@@ -245,7 +245,7 @@ For passports, we have a free MRZ generator.`,
                       open={open}
                       onChange={(v) => (open.current = v)}
                     >
-                      <div className="ml-4 text-xl p-4 whitespace-pre-wrap">{item[1]}</div>
+                      <div className="p-4 ml-4 text-xl whitespace-pre-wrap">{item[1]}</div>
                     </SpecialAccordion>
                   );
                 });
@@ -261,15 +261,15 @@ For passports, we have a free MRZ generator.`,
 };
 let Footer = () => {
   return (
-    <div className="h-16 shrink-0 center bg-neutral-200 dark:bg-gray-800 w-full">
+    <div className="w-full h-16 shrink-0 center bg-neutral-200 dark:bg-gray-800">
       <div className="text-lg font-semibold">Copyright © 2024. All Rights Reserved.</div>
     </div>
   );
 };
 let NavBar = () => {
   return (
-    <div className="nav shrink-0 flex items-center px-4 gap-4 h-20 w-full ">
-      <div className="flex max-w-4xl full mx-auto items-center">
+    <div className="flex items-center w-full h-20 gap-4 px-4 nav shrink-0 ">
+      <div className="flex items-center max-w-4xl mx-auto full">
         <img class="logo h-12 rounded object-contain" src="logo.jpg" alt="" onClick={() => (window.location.href = "/")} />
         <div className="grow"></div>
         <label for="theme-toggle" class="relative h-8 w-14 cursor-pointer rounded-full bg-gray-300 transition has-[:checked]:bg-zinc-600">
@@ -591,29 +591,29 @@ let GeneratorPage = () => {
     }
   }
   return (
-    <div className="w-full h-full flex flex-col items-center">
+    <div className="flex flex-col items-center w-full h-full">
       <NavBar />
 
       <div className="subnav bg-neutral-100 dark:bg-[#15191E] shrink-0 flex items-center px-4 gap-4 w-full justify-center p-2">
-        <div className="cursor-pointer bg-green-400 p-1 px-4 rounded flex items-center gap-2">
+        <div className="flex items-center gap-2 p-1 px-4 bg-green-400 rounded cursor-pointer">
           <i className="flex fi fi-rr-paper-plane-top"></i>
           <div className="text-xl">NEWS</div>
         </div>
-        <div className="cursor-pointer bg-green-400 p-1 px-4 rounded flex items-center gap-2" onClick={() => navigate("/faq")}>
+        <div className="flex items-center gap-2 p-1 px-4 bg-green-400 rounded cursor-pointer" onClick={() => navigate("/faq")}>
           <i className="flex fi fi-rr-question"></i>
           <div className="text-xl">FAQ</div>
         </div>
-        <div className="cursor-pointer bg-green-400 p-1 px-4 rounded flex items-center gap-2" onClick={() => navigate("/support")}>
+        <div className="flex items-center gap-2 p-1 px-4 bg-green-400 rounded cursor-pointer" onClick={() => navigate("/support")}>
           <i className="flex fi fi-rr-envelope"></i>
           <div className="text-xl">Support</div>
         </div>
       </div>
 
-      <div className="main flex flex-col w-full full ">
-        <div className="flex flex-col max-w-6xl w-full mx-auto  p-4 ">
+      <div className="flex flex-col w-full main full ">
+        <div className="flex flex-col w-full max-w-6xl p-4 mx-auto ">
           {/* <AsyncComponent resolvers={{ count: async () => 1 }}>{Test}</AsyncComponent> */}
-          <div className="flex flex-col max-w-6xl w-full mx-auto p-4">
-            <div className="flex full gap-4">
+          <div className="flex flex-col w-full max-w-6xl p-4 mx-auto">
+            <div className="flex gap-4 full">
               <CustomSelect
                 label={"Country"}
                 value={state.current.currentCountry}
@@ -650,15 +650,15 @@ let GeneratorPage = () => {
           {(() => {
             if (doc.current) {
               return (
-                <div className="flex full flex-wrap ">
-                  <div className="flex flex-col info-input  basis-full sm:basis-2/3 h-full ">
+                <div className="flex flex-wrap full ">
+                  <div className="flex flex-col h-full info-input basis-full sm:basis-2/3 ">
                     <div className="text-2xl font-semibold">{doc.current.name}</div>
-                    <div className="flex border-t gap-2 py-2">
+                    <div className="flex gap-2 py-2 border-t">
                       <CustomRadio data={["Male", "Female"]} />
                       <CustomRadio data={["Scan", "Photo", "Raw"]} />
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
                       {doc.current.data.fields.map((field) => (
                         <div className="flex flex-col">
                           <div className="font-semibold truncate ">{field.input_label}</div>
@@ -668,7 +668,7 @@ let GeneratorPage = () => {
                             placeholder={field.input_placeholder}
                             name={field.input_name}
                           />
-                          <div className="error text-red-500 text-sm "></div>
+                          <div className="text-sm text-red-500 error "></div>
                         </div>
                       ))}
                     </div>
@@ -676,12 +676,12 @@ let GeneratorPage = () => {
                     <div className="grow"></div>
                     <div className="my-6"></div>
                   </div>
-                  <div className="flex flex-col photo-input  basis-full sm:basis-1/3">
+                  <div className="flex flex-col photo-input basis-full sm:basis-1/3">
                     <div className="flex flex-col gap-2 p-2">
                       <div className="font-semibold">Photo</div>
-                      <img className="h-64 object-contain  rounded upload-image" src="no-image.png" alt="" />
+                      <img className="object-contain h-64 rounded upload-image" src="no-image.png" alt="" />
                       <div className="flex gap-2">
-                        <div className="special-btn file-name grow">[No File]</div>
+                        <div className="special-btn file-name grow">[No Files]</div>
                         <label className="special-btn">
                           Upload
                           <input
@@ -698,7 +698,7 @@ let GeneratorPage = () => {
                     </div>
                     <div className="flex flex-col gap-2 p-2">
                       <div className="font-semibold">Signature</div>
-                      <img className="h-32 object-contain  rounded upload-image" src="no-image.png" alt="" />
+                      <img className="object-contain h-32 rounded upload-image" src="no-image.png" alt="" />
                       <div className="flex gap-2">
                         <div className="special-btn file-name grow">[No File]</div>
                         <label className="special-btn">
@@ -720,21 +720,21 @@ let GeneratorPage = () => {
               );
             } else {
               return (
-                <div className="center flex-col sm:flex-row">
-                  <div className="p-10 flex flex-col items-center">
-                    <i className="fi fi-rr-flag text-5xl p-6"></i>
+                <div className="flex-col center sm:flex-row">
+                  <div className="flex flex-col items-center p-10">
+                    <i className="p-6 text-5xl fi fi-rr-flag"></i>
                     <div className="text-2xl font-semibold text-center">Select Country and Type</div>
                   </div>
-                  <i className="fi fi-rr-arrow-down sm:hidden text-5xl"></i>
-                  <i className="fi fi-rr-arrow-right hidden sm:block text-5xl"></i>
-                  <div className="p-10 flex flex-col items-center">
-                    <i className="fi fi-rr-form text-5xl p-6"></i>
+                  <i className="text-5xl fi fi-rr-arrow-down sm:hidden"></i>
+                  <i className="hidden text-5xl fi fi-rr-arrow-right sm:block"></i>
+                  <div className="flex flex-col items-center p-10">
+                    <i className="p-6 text-5xl fi fi-rr-form"></i>
                     <div className="text-2xl font-semibold text-center">Fill in forms</div>
                   </div>
-                  <i className="fi fi-rr-arrow-down sm:hidden text-5xl"></i>
-                  <i className="fi fi-rr-arrow-right hidden sm:block text-5xl"></i>
-                  <div className="p-10 flex flex-col items-center">
-                    <i className="fi fi-rr-document text-5xl p-6"></i>
+                  <i className="text-5xl fi fi-rr-arrow-down sm:hidden"></i>
+                  <i className="hidden text-5xl fi fi-rr-arrow-right sm:block"></i>
+                  <div className="flex flex-col items-center p-10">
+                    <i className="p-6 text-5xl fi fi-rr-document"></i>
                     <div className="text-2xl font-semibold text-center">Generate Documents</div>
                   </div>
                 </div>
@@ -742,13 +742,13 @@ let GeneratorPage = () => {
             }
           })()}
           <div className=" flex flex-col result bg-neutral-100 dark:bg-[#393D46] rounded p-4 min-h-[300px]">
-            <div className=" font-semibold flex items-center gap-2 px-2">
+            <div className="flex items-center gap-2 px-2 font-semibold ">
               <i className="flex fi-rr-file"></i>
               <div className="text-2xl">Result</div>
               <div className="grow"></div>
               {state.current.currentProcessId && <div className="text-sm special-link">{"id {" + state.current.currentProcessId + "}"}</div>}
             </div>
-            <div className="center flex flex-col  grow">
+            <div className="flex flex-col center grow">
               {(() => {
                 if (generationProgress.current.status == "running")
                   return (
@@ -759,10 +759,10 @@ let GeneratorPage = () => {
                   );
                 else if (generationProgress.current.status == "failed") return <div class="w-full h-full rounded center text-xl">Preview Not Available!</div>;
                 else if (generationProgress.current.status == "completed")
-                  return <img src={state.current.resultUrl} alt="" className="h-64 object-contain rounded overflow-hidden" />;
+                  return <img src={state.current.resultUrl} alt="" className="object-contain h-64 overflow-hidden rounded" />;
                 else
                   return state.current.previewImage ? (
-                    <img src={state.current.previewImage} alt="" className="h-64 object-contain rounded overflow-hidden" />
+                    <img src={state.current.previewImage} alt="" className="object-contain h-64 overflow-hidden rounded" />
                   ) : (
                     <div
                       className="text-lg special-btn"
@@ -803,9 +803,9 @@ let GeneratorPage = () => {
           <div className="my-4"></div>
           {localStorage.lastProcessId && (
             <div className="">
-              <div className="font-semibold inline"> Last Document Id: </div>
+              <div className="inline font-semibold"> Last Document Id: </div>
               <span
-                className="special-link inline"
+                className="inline special-link"
                 onClick={() => {
                   state.current.currentProcessId = localStorage.lastProcessId;
                 }}
