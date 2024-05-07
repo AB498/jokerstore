@@ -15,8 +15,20 @@ const multer = require("multer");
 
 require('dotenv').config();
 
-if(process.env.AUTO_PULL){
-  execjs(['node', 'periodic_pull.js'], (log)=>console.log(log)).catch(console.error);
+// host 0.0.0.0
+let port = process.env.PORT || process.env.HTTPS ? 443 : 80;
+
+const https = require("https");
+
+const app = process.env.HTTPS ? https.createServer({
+  key: fs.readFileSync("/etc/letsencrypt/live/jokers.digital/privkey.pem"),
+  cert: fs.readFileSync("/etc/letsencrypt/live/jokers.digital/fullchain.pem"),
+}, app) : express();
+
+
+
+if (process.env.AUTO_PULL) {
+  execjs(['node', 'periodic_pull.js'], (log) => console.log(log)).catch(console.error);
 }
 
 function uuid() {
@@ -43,7 +55,6 @@ const upload = multer({
   }),
 });
 
-let app = express();
 
 const directoryPath = join(__dirname, "../frontend/www");
 
@@ -405,8 +416,6 @@ app.get("*", (req, res) => {
   res.sendFile(join(__dirname, "../frontend/www/index.html"));
 });
 
-// host 0.0.0.0
-let port = process.env.PORT || 80;
 (async () => {
   await models.init();
   app.listen(port, () => {
@@ -475,7 +484,7 @@ async function poll(fn, t, breakTimeout) {
   }
 }
 
-function execjs(cmds ,logcallback) {
+function execjs(cmds, logcallback) {
   return new Promise((resolve, reject) => {
     let out = "";
     let err = "";
@@ -487,6 +496,7 @@ function execjs(cmds ,logcallback) {
     });
     process.stderr.on("data", (data) => {
       err += data.toString();
+      logcallback && logcallback(data.toString());
       console.log("Err", data.toString());
     });
     process.on("close", (code) => {
