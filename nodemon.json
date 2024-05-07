@@ -5,7 +5,7 @@
     "node_modules/**/node_modules",
     "static/**/*"
   ],
-  "exec": "node backend/index.js",
+  "exec": "node backend/index.js || touch app.js",
   "watch": [
     "**/*.js",
     "**/*.json"
