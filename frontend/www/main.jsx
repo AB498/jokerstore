@@ -681,7 +681,7 @@ let GeneratorPage = () => {
                       <div className="font-semibold">Photo</div>
                       <img className="object-contain h-64 rounded upload-image" src="no-image.png" alt="" />
                       <div className="flex gap-2">
-                        <div className="special-btn file-name grow">[No Files]</div>
+                        <div className="special-btn file-name grow">[No File]</div>
                         <label className="special-btn">
                           Upload
                           <input
