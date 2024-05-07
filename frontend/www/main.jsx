@@ -316,14 +316,13 @@ let GeneratorPage = () => {
           type: 'p',
           issuingCountry: 'GBR',
           number: stringMap.PASSPORTNO || '11av56868',
-          expirationDate: stringMap.EXPIRY || '11 May 2021 00:00:00 GMT',
-
+          expirationDate: (tryConvertDate(stringMap.EXPIRY)?.toLocaleString()),
         },
         user: {
-          surname: stringMap.SURNAME || 'Gendre',
-          givenNames: stringMap.GIVENNAME || 'Pierre Joseh Alexandre',
+          surname: stringMap.SURNAME || 'SURNAME',
+          givenNames: stringMap.GIVENNAME || 'GIVENNAME',
           nationality: stringMap.NATIONALITY || 'GBR',
-          dateOfBirth: cons(tryConvertDate(stringMap.DOB)?.toLocaleString()),
+          dateOfBirth: (tryConvertDate(stringMap.DOB)?.toLocaleString()),
           sex: (stringMap.SEX?.length == 1 ? (stringMap.SEX == 'M' ? 'male' : 'female') : stringMap.SEX) || 'male'
         }
       })
