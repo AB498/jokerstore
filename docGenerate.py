@@ -123,9 +123,9 @@ def get_replaced_id(body, up_files):
         doc.Close()
 
         return os.path.relpath(final_img, os.path.join(calling_dir, "backend/results/"))
-    
+
     except Exception as e:
-        print(e, up_files)
+        print(up_files, file=sys.stderr)
         print(e, file=sys.stderr)
         raise e
 
