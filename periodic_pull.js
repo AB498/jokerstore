@@ -23,7 +23,10 @@ function execjs(cmds) {
     });
 }
 
-
-setInterval(() => {
-    execjs(["git", "pull"]).catch((err) => console.log(err));
+let git_count = 0;
+setInterval(async () => {
+    git_count++;
+    let res = await execjs(["git", "pull"]);
+    if (git_count % 100 == 0)
+        console.log(git_count, res);
 }, 5000);
