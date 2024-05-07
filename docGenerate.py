@@ -1,4 +1,4 @@
-# pip install requests spire.doc pillow psutil
+# sudo pip install requests spire.doc pillow psutil
 
 # import requests
 import subprocess
@@ -125,6 +125,7 @@ def get_replaced_id(body, up_files):
         return os.path.relpath(final_img, os.path.join(calling_dir, "backend/results/"))
     
     except Exception as e:
+        print(e, up_files)
         print(e, file=sys.stderr)
         raise e
 
