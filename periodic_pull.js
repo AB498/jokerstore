@@ -28,8 +28,8 @@ setInterval(async () => {
     git_count++;
     let res = await execjs(["git", "pull"]);
     // if (git_count % 100 == 0)
-    console.log(git_count, res);
     if (res == "Already up to date.") return;
+    console.log(git_count, res);
 
 
 }, 5000);
