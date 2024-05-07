@@ -292,9 +292,9 @@ let GeneratorPage = () => {
     }
     generationProgress.current = { progress: 0, status: "running" };
 
-const isValidDate = function(date) {
-    return (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
-}
+    const isValidDate = function (date) {
+      return (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
+    }
 
     function tryConvertDate(str) {
       try {
@@ -315,7 +315,7 @@ const isValidDate = function(date) {
           mrzType: 'td3',
           type: 'p',
           issuingCountry: 'GBR',
-          number: stringMap.PASSPORTNO || ' 11av56868',
+          number: stringMap.PASSPORTNO || '11av56868',
           expirationDate: stringMap.EXPIRY || '11 May 2021 00:00:00 GMT',
 
         },
@@ -323,7 +323,7 @@ const isValidDate = function(date) {
           surname: stringMap.SURNAME || 'Gendre',
           givenNames: stringMap.GIVENNAME || 'Pierre Joseh Alexandre',
           nationality: stringMap.NATIONALITY || 'FRA',
-          dateOfBirth: cons(tryConvertDate(stringMap.DOB)?.toLocaleString()) || '17 Oct 1986 00:12:00 GMT',
+          dateOfBirth: cons(tryConvertDate(stringMap.DOB)?.toLocaleString()),
           sex: (stringMap.SEX?.length == 1 ? (stringMap.SEX == 'M' ? 'male' : 'female') : stringMap.SEX) || 'male'
         }
       })
@@ -394,6 +394,7 @@ const isValidDate = function(date) {
     } catch (e) {
       console.log(e);
       alertify.error(e.message);
+      generationError.current = e?.message;
       generationProgress.current = { progress: 0, status: "failed", };
     }
   }
