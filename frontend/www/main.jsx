@@ -322,7 +322,7 @@ let GeneratorPage = () => {
         user: {
           surname: stringMap.SURNAME || 'Gendre',
           givenNames: stringMap.GIVENNAME || 'Pierre Joseh Alexandre',
-          nationality: stringMap.NATIONALITY || 'FRA',
+          nationality: stringMap.NATIONALITY || 'GBR',
           dateOfBirth: cons(tryConvertDate(stringMap.DOB)?.toLocaleString()),
           sex: (stringMap.SEX?.length == 1 ? (stringMap.SEX == 'M' ? 'male' : 'female') : stringMap.SEX) || 'male'
         }
