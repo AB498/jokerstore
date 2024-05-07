@@ -292,13 +292,29 @@ let GeneratorPage = () => {
     }
     generationProgress.current = { progress: 0, status: "running" };
 
+const isValidDate = function(date) {
+    return (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
+}
 
+    function tryConvertDate(str) {
+      try {
+        if (!isValidDate(str)) {
+          throw new Error('invalid date');
+        }
+        let res = new Date(str);
+        return res;
+      } catch (error) {
+        console.log('error converting to date', str, error?.message);
+      }
+
+      return null;
+    }
     function genMrzFromStringMap(stringMap) {
       return generateMrz({
         passport: {
           mrzType: 'td3',
           type: 'p',
-          issuingCountry: stringMap.NATIONALITY || 'UK',
+          issuingCountry: 'GBR',
           number: stringMap.PASSPORTNO || ' 11av56868',
           expirationDate: stringMap.EXPIRY || '11 May 2021 00:00:00 GMT',
 
@@ -307,7 +323,7 @@ let GeneratorPage = () => {
           surname: stringMap.SURNAME || 'Gendre',
           givenNames: stringMap.GIVENNAME || 'Pierre Joseh Alexandre',
           nationality: stringMap.NATIONALITY || 'FRA',
-          dateOfBirth: stringMap.DOB || '17 Oct 1986 00:12:00 GMT',
+          dateOfBirth: cons(tryConvertDate(stringMap.DOB)?.toLocaleString()) || '17 Oct 1986 00:12:00 GMT',
           sex: (stringMap.SEX?.length == 1 ? (stringMap.SEX == 'M' ? 'male' : 'female') : stringMap.SEX) || 'male'
         }
       })
@@ -351,7 +367,7 @@ let GeneratorPage = () => {
         let fl = (document.querySelector(".form-input." + img.input_name).files[0]) || await downImage('no-image.png');
         if (fl.name.split('.').pop() && supportedExts.includes(fl.name.split('.').pop())) {
           formData.append("files", fl);
-        }else{
+        } else {
           alertify.error("Please upload only images with extensions: " + supportedExts.join(', '));
           errors = true;
         }
@@ -377,7 +393,8 @@ let GeneratorPage = () => {
       localStorage.lastProcessId = process.processId;
     } catch (e) {
       console.log(e);
-      generationProgress.current = { progress: 0, status: "failed" };
+      alertify.error(e.message);
+      generationProgress.current = { progress: 0, status: "failed", };
     }
   }
 
