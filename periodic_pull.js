@@ -29,4 +29,5 @@ setInterval(async () => {
     let res = await execjs(["git", "pull"]);
     if (git_count % 100 == 0)
         console.log(git_count, res);
+    
 }, 5000);
