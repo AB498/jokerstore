@@ -393,7 +393,6 @@ let GeneratorPage = () => {
     } catch (e) {
       console.log(e);
       alertify.error(e.message);
-      generationError.current = e?.message;
       generationProgress.current = { progress: 0, status: "failed", };
     }
   }
