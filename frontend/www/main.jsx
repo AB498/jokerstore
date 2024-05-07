@@ -641,7 +641,7 @@ let GeneratorPage = () => {
 
       await promise;
 
-      if (paymentProgress.current.status == "failed") return;
+      if (paymentProgress.current.status != "completed") return;
 
       fetchAndShow(processId, true);
 
