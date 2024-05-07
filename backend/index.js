@@ -16,7 +16,7 @@ const multer = require("multer");
 require('dotenv').config();
 
 // host 0.0.0.0
-let port = process.env.PORT || process.env.HTTPS ? 443 : 80;
+let port = process.env.PORT || ((process.env.HTTPS == 1) ? 443 : 80);
 
 const https = require("https");
 
