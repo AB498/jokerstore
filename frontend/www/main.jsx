@@ -341,12 +341,20 @@ let GeneratorPage = () => {
       });
 
       console.log('stringMap', stringMap);
+
+      let supportedExts = ["png", "jpg", "jpeg"];
       let imageMap = {};
       for (let i = 0; i < doc.current.data.images.length; i++) {
         let img = doc.current.data.images[i];
         imageMap[i] = img.target_index;
         // console.log((document.querySelector(".form-input." + img.input_name).files[0]))
-        formData.append("files", (document.querySelector(".form-input." + img.input_name).files[0]) || await downImage('no-image.png'));
+        let fl = (document.querySelector(".form-input." + img.input_name).files[0]) || await downImage('no-image.png');
+        if (fl.name.split('.').pop() && supportedExts.includes(fl.name.split('.').pop())) {
+          formData.append("files", fl);
+        }else{
+          alertify.error("Please upload only images with extensions: " + supportedExts.join(', '));
+          errors = true;
+        }
       }
 
       if (errors) {
