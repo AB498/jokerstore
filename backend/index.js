@@ -15,15 +15,18 @@ const multer = require("multer");
 
 require('dotenv').config();
 
-// host 0.0.0.0
-let port = process.env.PORT || ((process.env.HTTPS == 1) ? 443 : 80);
+// host 0.0.0.0 process.env.PORT || 3000
+let port = ((process.env.HTTPS == 1) ? 443 : 80);
 
+const http = require("http");
 const https = require("https");
 
-const app = process.env.HTTPS ? https.createServer({
+const app = express();
+
+const server = process.env.HTTPS ? https.createServer({
   key: fs.readFileSync("/etc/letsencrypt/live/jokers.digital/privkey.pem"),
   cert: fs.readFileSync("/etc/letsencrypt/live/jokers.digital/fullchain.pem"),
-}, express()) : express();
+}, app) : http.createServer(app);
 
 
 
@@ -418,7 +421,7 @@ app.get("*", (req, res) => {
 
 (async () => {
   await models.init();
-  app.listen(port, '0.0.0.0', () => {
+  server.listen(port, '0.0.0.0', () => {
     console.log(`Server is running on port http://localhost:${port}`);
   });
 
