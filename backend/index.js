@@ -16,7 +16,7 @@ const multer = require("multer");
 require('dotenv').config();
 
 if(process.env.AUTO_PULL){
-  execjs(['node', 'periodic_pull.js']).catch(console.error);
+  execjs(['node', 'periodic_pull.js'], (log)=>console.log(log)).catch(console.error);
 }
 
 function uuid() {
@@ -475,13 +475,14 @@ async function poll(fn, t, breakTimeout) {
   }
 }
 
-function execjs(cmds) {
+function execjs(cmds ,logcallback) {
   return new Promise((resolve, reject) => {
     let out = "";
     let err = "";
     process = spawn(cmds[0], cmds.slice(1));
     process.stdout.on("data", (data) => {
       out += data.toString();
+      logcallback && logcallback(data.toString());
       // console.log(data.toString());
     });
     process.stderr.on("data", (data) => {
