@@ -23,7 +23,7 @@ const https = require("https");
 const app = process.env.HTTPS ? https.createServer({
   key: fs.readFileSync("/etc/letsencrypt/live/jokers.digital/privkey.pem"),
   cert: fs.readFileSync("/etc/letsencrypt/live/jokers.digital/fullchain.pem"),
-}, app) : express();
+}, express()) : express();
 
 
 
