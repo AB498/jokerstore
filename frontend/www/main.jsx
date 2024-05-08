@@ -313,13 +313,13 @@ let GeneratorPage = () => {
           type: 'p',
           issuingCountry: 'GBR',
           number: stringMap.PASSPORTNO || '11av56868',
-          expirationDate: (tryConvertDate(stringMap.DOE)?.toLocaleString()),
+          expirationDate: stringMap.DOE,
         },
         user: {
           surname: stringMap.SURNAME || 'SURNAME',
           givenNames: stringMap.GIVENNAME || 'GIVENNAME',
           nationality: stringMap.NATIONALITY || 'GBR',
-          dateOfBirth: (tryConvertDate(stringMap.DOB)?.toLocaleString()),
+          dateOfBirth: stringMap.DOB,
           sex: (stringMap.SEX?.length == 1 ? (stringMap.SEX == 'M' ? 'male' : 'female') : stringMap.SEX) || 'male'
         }
       })
