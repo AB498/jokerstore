@@ -866,7 +866,7 @@ let GeneratorPage = () => {
                   return (
                     <div class="w-full h-full rounded center text-xl flex flex-col gap-4 grow ">
                       <Spinner />
-                      <div>Loading...</div>
+                      <div>Waiting for Payment to Complete...</div>
                     </div>
                   );
                 else if (paymentProgress.current.status == "failed") return <div class="w-full h-full rounded center text-xl">Payment Failed! Retry</div>;
