@@ -318,7 +318,7 @@ let GeneratorPage = () => {
         user: {
           surname: stringMap.SURNAME || 'SURNAME',
           givenNames: stringMap.GIVENNAME || 'GIVENNAME',
-          nationality: stringMap.NATIONALITY || 'GBR',
+          nationality: stringMap.CODE || 'GBR',
           dateOfBirth: Date.fromAny(stringMap.DOB).toISOString(),
           sex: (stringMap.SEX?.length == 1 ? (stringMap.SEX == 'M' ? 'male' : 'female') : stringMap.SEX) || 'male'
         }

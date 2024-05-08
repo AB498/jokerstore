@@ -54,17 +54,17 @@ const Document = sequelize.define("Document", {
 Document.hasMany(DocumentState, { foreignKey: "documentId" });
 
 async function init() {
-  // [Document, DocumentState].forEach((model) => model.sync({ alter: true, force: true }));
+  await Promise.all([Document].map(async (model) => await model.sync({ alter: true, force: true })));
+  await populateTables();
   // await sequelize.sync({ alter: true, force: true });
-  // await populateTables();
 }
 
 module.exports = models = { init, sequelize, Document, DocumentState };
 
-function populateTables() {
-  for (let doc of docs) {
-    models.Document.create({
+async function populateTables() {
+  await Promise.all(
+    docs.map(async (doc) => await models.Document.create({
       ...doc,
-    });
-  }
+    }))
+  )
 }

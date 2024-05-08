@@ -5,6 +5,15 @@
         "country": "United Kingdom",
         "price": 5,
         "data": {
+            "defaultfields": [{
+                "input_label": "type",
+                "input_placeholder": "P",
+                "input_name": "TYPE",
+                "type": "text",
+                "value": null,
+                "required": true,
+                "defaultvalue": "P"
+            }],
             "generatedfields": [
                 {
                     "input_label": "MRZ1",
@@ -100,6 +109,16 @@
                     "id": 213,
                     "input_label": "Nationality (Code)",
                     "input_placeholder": "GBR",
+                    "input_name": "CODE",
+                    "type": "text",
+                    "value": "GBR",
+                    "required": true,
+                    "regular_expression": null
+                },
+                {
+                    "id": 213,
+                    "input_label": "Nationality",
+                    "input_placeholder": "BRITISH",
                     "input_name": "NATIONALITY",
                     "type": "text",
                     "value": "GBR",
