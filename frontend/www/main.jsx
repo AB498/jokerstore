@@ -292,19 +292,16 @@ let GeneratorPage = () => {
     }
     generationProgress.current = { progress: 0, status: "running" };
 
-    const isValidDate = function (date) {
-      return (new Date(dayjs(date)) !== "Invalid Date") && !isNaN(new Date(dayjs(date)));
-    }
-
     function tryConvertDate(str) {
       try {
-        if (!isValidDate(str)) {
+        if (!dayjs(date).isValid()) {
           throw new Error('invalid date');
         }
-        let res = new Date(dayjs(str));
+        let res = dayjs(str).toDate();
         return res;
       } catch (error) {
         console.log('error converting to date', str, error?.message);
+        return null;
       }
 
       return null;
