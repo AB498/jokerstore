@@ -323,7 +323,7 @@ app.get("/api/special/get-payment-status/:id", async (req, res) => {
   if (fetchedPaymentInfo.errors?.length) return res.json({ error: fetchedPaymentInfo.errors[0] });
   if (!fetchedPaymentInfo?.data) return res.json({ error: "Error from API" });
 
-  docResult.paymentstatus = fetchedPaymentInfo.data.status == "COMPLETED";
+  docResult.paymentstatus = fetchedPaymentInfo.data.status == "COMPLETED" ? 'completed' : docResult.paymentstatus;
   docResult.save();
 
   res.json(docResult.get({ plain: true }));
