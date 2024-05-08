@@ -504,7 +504,7 @@ const _isAValidPrecisionOfType = (chr, mzrType) =>
 
 const _isMrzTypeValid = type => ['td1', 'td3', 'mrvb'].indexOf(type) !== -1
 
-const _isDateFormatValid = stringDate => !isNaN(Date.fromAny(stringDate))
+const _isDateFormatValid = stringDate => !isNaN(Date.parse(stringDate))
 
 const _isNameFormatValid = name =>
     name.length > 0 ? new RegExp(/^([a-zA-Z]+[ |-|-|']?)+$/g).test(name) : true
