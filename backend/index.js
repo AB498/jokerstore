@@ -331,6 +331,7 @@ app.get("/api/special/get-payment-status/:id", async (req, res) => {
 function processFileForFileName(file) {
   // rename file to date.now
   let name = `/uploads/${uuid()}-${file.originalname}`;
+  console.log('file', name)
   fs.renameSync(file.path, "." + name);
   return name;
 }
