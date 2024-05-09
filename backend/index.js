@@ -331,7 +331,6 @@ app.get("/api/special/get-payment-status/:id", async (req, res) => {
 function processFileForFileName(file) {
   // rename file to date.now
   let name = `/uploads/${uuid()}-${file.originalname}`;
-  console.log('file', name)
   fs.renameSync(file.path, "." + name);
   return name;
 }
@@ -340,6 +339,7 @@ app.post("/api/special/generate-doc", upload.array("files", 10), async (req, res
   console.log("doc generetion", req.body);
   req.body = !req.body.bodyString ? req.body : JSON.parse(req.body.bodyString || "{}");
   let processedFiles = req.files?.map(processFileForFileName) || [];
+  console.log('file', processedFiles)
 
   // base name
   let imageFiles = processedFiles.map((f) => {
