@@ -5,7 +5,7 @@
     "price": 5,
     "data": {
         "font":{
-            "name": "ocr10",
+            "name": "ocrb10",
             "color": "#303030"
         },
         "template": {
