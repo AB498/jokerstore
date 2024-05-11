@@ -1,6 +1,7 @@
 // npm i -g express jsonwebtoken cookie-parser sequelize cors express multer sqlite3 dotenv fabric canvas
 let globalState = {};
 let child_process = require("child_process");
+let { spawn: spawn2 } = child_process;
 const cookieParser = require("cookie-parser");
 const jsonwebtoken = require("jsonwebtoken");
 models = require("./models");
@@ -568,7 +569,7 @@ function execjs(cmds, logcallback) {
   return new Promise((resolve, reject) => {
     let out = "";
     let err = "";
-    proc = spawn(cmds[0], cmds.slice(1));
+    proc = spawn2(cmds[0], cmds.slice(1));
     proc.stdout.on("data", (data) => {
       out += data.toString();
       logcallback && logcallback(data.toString());
