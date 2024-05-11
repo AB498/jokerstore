@@ -157,6 +157,7 @@
             {
                 "id": "1e188a09-5373-4100-bb37-1b7a275b1166",
                 "name": "photo",
+                "opacity": 0.5,
                 "type": "image",
                 "points": [
                     [
