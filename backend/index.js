@@ -238,7 +238,7 @@ app.get("/api/special/generate-doc-status/:id", async (req, res) => {
   });
 
 
-  if (existingProcess.error) {
+  if (existingProcess?.error) {
     return res.json(existingProcess.get({ plain: true }));
   }
   if (!existingProcess) return res.json({ error: "Process Doesnt Exist" });
