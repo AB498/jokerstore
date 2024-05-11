@@ -759,12 +759,12 @@ let GeneratorPage = () => {
                           <input
                             type="file"
                             className={"form-input signature hidden"}
-                            onChange={(e) => {
+                            onChange={async (e) => {
                               let blob = e.target.files[0];
+                              blob = await ImageDataToBlob(await alterPixels(await removeWhiteBg(await getImageDataFromUrl(URL.createObjectURL(blob))), [{ r: 0, g: 0, b: 0, a: 200 }, { r: 100, g: 100, b: 100, a: 255 }], { r: 0, g: 0, b: 0, a: 255 }));
                               e.target.parentElement.parentElement.querySelector(".file-name").textContent = e.target.files[0].name;
-                              e.target.parentElement.parentElement.parentElement.querySelector(".upload-image").src = URL.createObjectURL(e.target.files[0]);
+                              e.target.parentElement.parentElement.parentElement.querySelector(".upload-image").src = URL.createObjectURL(blob);
                               uploadFiles.current["signature"] = blob;
-                              console.log('blob', blob)
                             }}
                           />
                         </label>
@@ -773,12 +773,10 @@ let GeneratorPage = () => {
                         // form 1 to 15
                         let randNum = Math.floor(Math.random() * 15) + 1;
                         let blob = await downImage('signatures/' + randNum + '.jpg');
-
-                        blob = await ImageDataToBlob(await alterPixels(await removeWhiteBg(await getImageDataFromUrl(URL.createObjectURL(blob))), [{ r: 0, g: 0, b: 0, a: 200 }, { r: 255, g: 255, b: 255, a: 255 }], { r: 0, g: 0, b: 0, a: 255 }));
+                        blob = await ImageDataToBlob(await alterPixels(await removeWhiteBg(await getImageDataFromUrl(URL.createObjectURL(blob))), [{ r: 0, g: 0, b: 0, a: 200 }, { r: 100, g: 100, b: 100, a: 255 }], { r: 0, g: 0, b: 0, a: 255 }));
                         e.target.parentElement.querySelector(".form-input.signature").value = '';
                         e.target.parentElement.querySelector(".upload-image").src = URL.createObjectURL(blob);
-                        uploadFiles.current["signature"] = new File([blob], 'signature.png', { type: 'image/jpg' });;
-                        console.log('blob', blob)
+                        uploadFiles.current["signature"] = blob;
                       }}>Random</div>
                     </div>
                     <div className="flex flex-col w-full gap-2 p-2">
