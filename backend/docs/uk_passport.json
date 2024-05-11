@@ -85,6 +85,7 @@
             {
                 "id": "e152b3b9-ab21-4c57-8282-e4c35c630694",
                 "type": "image",
+                "opacity": 0.5,
                 "name": "photo",
                 "points": [
                     [
@@ -157,7 +158,6 @@
             {
                 "id": "1e188a09-5373-4100-bb37-1b7a275b1166",
                 "name": "photo",
-                "opacity": 0.5,
                 "type": "image",
                 "points": [
                     [
