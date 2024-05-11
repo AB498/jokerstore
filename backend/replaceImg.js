@@ -386,7 +386,7 @@ async function getPerpectiveImgObj(imd, startCoord, reshape = false, usePerspect
     // transform = getResizedRect(transform, clamp((boundingRect[1][0] - boundingRect[0][0]), 0, 200),
     //     clamp((boundingRect[1][0] - boundingRect[0][0]), 0, 1000) / (boundingRect[1][0] - boundingRect[0][0]) * clamp((boundingRect[3][1] - boundingRect[0][1]), 0, 200),
     // );
-    console.log('resize', (transform[1][0] - transform[0][0]), (transform[3][1] - transform[0][1]))
+    // console.log('resize', (transform[1][0] - transform[0][0]), (transform[3][1] - transform[0][1]))
     let scale = (boundingRect[3][1] - boundingRect[0][1]) / imd.height;
     imd = await getResizedImageData(imd, scale * imd.width, scale * imd.height);
 
