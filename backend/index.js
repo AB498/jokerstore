@@ -1,4 +1,4 @@
-// npm i -g express jsonwebtoken cookie-parser sequelize cors express multer sqlite3 dotenv
+// npm i -g express jsonwebtoken cookie-parser sequelize cors express multer sqlite3 dotenv fabric canvas
 let globalState = {};
 let child_process = require("child_process");
 let { spawn } = child_process;
@@ -65,6 +65,10 @@ const directoryPath = join(__dirname, "../frontend/www");
 
 if (!fs.existsSync(__dirname + "/uploads")) fs.mkdirSync(__dirname + "/uploads");
 if (!fs.existsSync(__dirname + "/results")) fs.mkdirSync(__dirname + "/results");
+if (fs.existsSync(join(__dirname, "../local"))) {
+  app.use("/local", express.static(join(__dirname, "../local")));
+}
+app.use("/docs", express.static(__dirname + "/docs"));
 app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use("/results", express.static(__dirname + "/results"));
 app.use("/", express.static(directoryPath));
@@ -330,8 +334,8 @@ app.get("/api/special/get-payment-status/:id", async (req, res) => {
 });
 function processFileForFileName(file) {
   // rename file to date.now
-  let name = `/uploads/${uuid()}-${file.originalname}`;
-  fs.renameSync(file.path, "." + name);
+  let name = `${uuid()}-${file.originalname}`;
+  fs.renameSync(file.path, join(__dirname, 'uploads', name));
   return name;
 }
 
@@ -346,8 +350,30 @@ app.post("/api/special/generate-doc", upload.array("files", 10), async (req, res
     return f.replace(/^.*[\\\/]/, "");
   });
 
-  let { slug, guestUser, id, stringMap, imageMap } = req.body;
 
+  let { guestUser, id, slug,stringMap, imageMap } = req.body;
+  let doc = id ? await models.Document.findOne({ where: { id } }) : await models.Document.findOne({ where: { slug } });
+  let defaultStringMap = JSON.parse(fs.readFileSync(join(__dirname, 'docs', doc.slug + '.json'), 'utf8'));
+  console.log('input', stringMap, imageMap)
+  defaultStringMap = Object.fromEntries(defaultStringMap.data.fields.map(items => {
+    return [items.input_name, items.input_placeholder]
+  }));
+  stringMap = { ...defaultStringMap, ...stringMap };
+
+
+  console.log(' processedFiles', processedFiles)
+  for (let key in imageMap) {
+    // key=uploaded file index
+    // val=placeholder name
+    val = imageMap[key];
+    let filename = processedFiles[key] ? join('uploads', processedFiles[key]) : 'no-image.png';
+    stringMap[val] = { type: 'image', value: join(__dirname, filename) }
+    console.log(' processedFiles[key]', filename)
+  }
+  //imagemap to stringmap
+
+
+  console.log('defaultStringMap', stringMap)
   let newProcess = new models.DocumentState({
     user: guestUser,
     documentId: id,
@@ -356,11 +382,10 @@ app.post("/api/special/generate-doc", upload.array("files", 10), async (req, res
 
   await newProcess.save();
 
-  let doc = id ? await models.Document.findOne({ where: { id } }) : await models.Document.findOne({ where: { slug } });
 
   processQueue.push(startProcess({ processId: newProcess.id, guestUser, doc, stringMap, imageMap, imageFiles }));
 
-  res.json({ processId: newProcess.id });
+  res.json(newProcess.get({ plain: true }));
 });
 app.get("/api/special/get-random-doc", async (req, res) => {
   // random file from results/
@@ -384,6 +409,32 @@ app.get("/api/special/get-random-doc", async (req, res) => {
   res.end(image);
 });
 
+// function startProcess({ processId, guestUser, doc, stringMap, imageMap, imageFiles }) {
+//   return {
+//     id: uuid(),
+//     status: "queued",
+//     data: { processId, guestUser, doc, stringMap, imageMap, imageFiles },
+//     run: async () => {
+//       // let res = "results/" + uuid() + ".png";
+
+//       let arg1 = JSON.stringify({
+//         body: {
+//           template: doc.slug + ".docx",
+//           stringMap,
+//           imageMap,
+//           files: imageFiles,
+//         },
+//       });
+//       let { result: fname, error: error } = await execjs(["python3", "docGenerate.py", arg1]);
+
+//       let res = { fileName: fname, error };
+//       // await new Promise((r) => setTimeout(() => r(), 1000));
+//       return res;
+//     },
+//   };
+// }
+
+let { replaceImg, ImageDataToBlob } = require('./replaceImg.js');
 function startProcess({ processId, guestUser, doc, stringMap, imageMap, imageFiles }) {
   return {
     id: uuid(),
@@ -400,21 +451,22 @@ function startProcess({ processId, guestUser, doc, stringMap, imageMap, imageFil
           files: imageFiles,
         },
       });
-      let { result: fname, error: error } = await execjs(["python3", "docGenerate.py", arg1]);
 
-      let res = { fileName: fname, error };
+      doc = JSON.parse(fs.readFileSync(join(__dirname, 'docs/', doc.slug + '.json')));
+      let imageData = await replaceImg(doc, stringMap);
+
+      let fname = uuid() + '.png';
+      fs.writeFileSync(join(__dirname, 'results/', fname), await ImageDataToBlob(imageData));
+      console.log('run complete', fname);
+
+      let res = { fileName: fname, error: null };
       // await new Promise((r) => setTimeout(() => r(), 1000));
       return res;
     },
   };
 }
 
-function processFileForFileName(file) {
-  // rename file to date.now
-  let name = join(__dirname, "uploads", `${uuid()}-${file.originalname}`);
-  fs.renameSync(file.path, name);
-  return name;
-}
+
 function parseFormDataBody(req, res, next) {
   req.body = !req.body.bodyString ? req.body : JSON.parse(req.body.bodyString || "{}");
   next();
@@ -427,9 +479,12 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json({ error: err.message });
 });
 
-app.get("*", (req, res) => {
+app.get("*", (req, res, next) => {
   //spa
-  res.sendFile(join(__dirname, "../frontend/www/index.html"));
+  if (["/", "/index.html"].includes(req.path)) {
+    return res.sendFile(join(__dirname, "../frontend/www/index.html"));
+  }
+  next();
 });
 
 (async () => {

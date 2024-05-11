@@ -1,5 +1,6 @@
 backend/results/
 backend/uploads/
+local/
 
 main.db
 

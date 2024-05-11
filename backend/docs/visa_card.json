@@ -1,0 +1,13 @@
+{
+    "slug": "visa_card",
+    "name": "Visa Card",
+    "price": 5,
+    "data": {
+        "template": {
+            "bg": "visa_card_bg.png",
+            "cover": "visa_card_cover.png",
+            "guide": "visa_card_guide.png"
+        },
+        "fields": []
+    }
+}

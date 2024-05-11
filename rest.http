@@ -20,10 +20,16 @@ POST http://localhost/api/special/generate-doc
 Content-Type: application/json
 
 {
-    "slug": "uk_dl",
+    "slug": "uk_passport",
     "stringMap": {
-        "SURNAME": "John Doe",
-        "DOB": "01/01/1970"
+        "SURNAME": {
+            "type": "text",
+            "value":"John Doe"
+            },
+        "DOB": {
+            "type": "text",
+            "value":"01.01.2000"
+        }
     },
     "imageMap": {
         "0": 0,

@@ -1,159 +1,14 @@
 [
     {
+        "slug": "visa_card",
+        "name": "Visa Card",
+        "price": 5
+    },
+    {
         "slug": "uk_passport",
         "name": "UK Passport",
         "country": "United Kingdom",
-        "price": 5,
-        "data": {
-            "defaultfields": [{
-                "input_label": "type",
-                "input_placeholder": "P",
-                "input_name": "TYPE",
-                "type": "text",
-                "value": null,
-                "required": true,
-                "defaultvalue": "P"
-            }],
-            "generatedfields": [
-                {
-                    "input_label": "MRZ1",
-                    "input_placeholder": "MRZ1<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
-                    "input_name": "MRZ1<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
-                    "type": "text",
-                    "value": null,
-                    "required": true,
-                    "resolver": "mrzCalculator1"
-                },
-                {
-                    "input_label": "MRZ2",
-                    "input_placeholder": "MRZ2<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
-                    "input_name": "MRZ2<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
-                    "type": "text",
-                    "value": null,
-                    "required": true,
-                    "resolver": "mrzCalculator2"
-                }
-            ],
-            "fields": [
-                {
-                    "id": 206,
-                    "input_label": "Surname",
-                    "input_placeholder": "DOE",
-                    "input_name": "SURNAME",
-                    "type": "text",
-                    "value": null,
-                    "required": true,
-                    "regular_expression": "[a-zA-Z][a-zA-Z ]+[a-zA-Z]|[a-zA-Z]|[a-zA-Z]{2}"
-                },
-                {
-                    "id": 207,
-                    "input_label": "Given names",
-                    "input_placeholder": "JOHN",
-                    "input_name": "GIVENNAME",
-                    "type": "text",
-                    "value": null,
-                    "required": true,
-                    "regular_expression": "[a-zA-Z][a-zA-Z ]+[a-zA-Z]|[a-zA-Z]|[a-zA-Z]{2}"
-                },
-                {
-                    "id": 208,
-                    "input_label": "Document Number (9 digits)",
-                    "input_placeholder": "123456789",
-                    "input_name": "PASSPORTNO",
-                    "type": "text",
-                    "value": null,
-                    "required": true,
-                    "regular_expression": "[0-9]{9}$"
-                },
-                {
-                    "id": 210,
-                    "input_label": "Date of birth (DD.MM.YYYY)",
-                    "input_placeholder": "02.05.1960",
-                    "input_name": "DOB",
-                    "type": "text",
-                    "value": null,
-                    "required": true,
-                    "regular_expression": "(((0[1-9]|[12][0-9]|3[01])\\.((0[13578]|1[02]))|((0[1-9]|[12][0-9]|30)\\.(0[469]|11))|(0[1-9]|[1][0-9]|2[0-8])\\.(02))\\.([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3}))|(29\\.02\\.(([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00)))"
-                },
-                {
-                    "id": 211,
-                    "input_label": "Date of issue (DD.MM.YYYY)",
-                    "input_placeholder": "05.05.2015",
-                    "input_name": "DOI",
-                    "type": "text",
-                    "value": null,
-                    "required": true,
-                    "regular_expression": "(((0[1-9]|[12][0-9]|3[01])\\.((0[13578]|1[02]))|((0[1-9]|[12][0-9]|30)\\.(0[469]|11))|(0[1-9]|[1][0-9]|2[0-8])\\.(02))\\.([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3}))|(29\\.02\\.(([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00)))"
-                },
-                {
-                    "id": 212,
-                    "input_label": "Date of expiration (DD.MM.YYYY)",
-                    "input_placeholder": "05.05.2025",
-                    "input_name": "DOE",
-                    "type": "text",
-                    "value": null,
-                    "required": true,
-                    "regular_expression": "(((0[1-9]|[12][0-9]|3[01])\\.((0[13578]|1[02]))|((0[1-9]|[12][0-9]|30)\\.(0[469]|11))|(0[1-9]|[1][0-9]|2[0-8])\\.(02))\\.([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3}))|(29\\.02\\.(([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00)))"
-                },
-                {
-                    "id": 209,
-                    "input_label": "Sex (M or F)",
-                    "input_placeholder": "M",
-                    "input_name": "SEX",
-                    "type": "text",
-                    "value": null,
-                    "required": true,
-                    "regular_expression": "[MmFf]"
-                },
-                {
-                    "id": 213,
-                    "input_label": "Nationality (Code)",
-                    "input_placeholder": "GBR",
-                    "input_name": "CODE",
-                    "type": "text",
-                    "value": "GBR",
-                    "required": true,
-                    "regular_expression": null
-                },
-                {
-                    "id": 213,
-                    "input_label": "Nationality",
-                    "input_placeholder": "BRITISH",
-                    "input_name": "NATIONALITY",
-                    "type": "text",
-                    "value": "GBR",
-                    "required": true,
-                    "regular_expression": null
-                },
-                {
-                    "id": 214,
-                    "input_label": "Place of Birth",
-                    "input_placeholder": "LONDON",
-                    "input_name": "POB",
-                    "type": "text",
-                    "value": null,
-                    "required": true,
-                    "regular_expression": null
-                }
-            ],
-            "images": [
-                {
-                    "input_name": "photo",
-                    "type": "file",
-                    "target_index": 1
-                },
-                {
-                    "input_name": "signature",
-                    "type": "file",
-                    "target_index": 0
-                },
-                {
-                    "input_name": "photo",
-                    "type": "file",
-                    "target_index": 2
-                }
-            ]
-        }
+        "price": 5
     },
     {
         "slug": "uk_dl",
@@ -288,12 +143,12 @@
                 {
                     "input_name": "photo",
                     "type": "file",
-                    "target_index": 1
+                    "target_index": 0
                 },
                 {
                     "input_name": "signature",
                     "type": "file",
-                    "target_index": 0
+                    "target_index": 1
                 }
             ]
         }
