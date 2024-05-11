@@ -418,7 +418,7 @@ async function getPerpectiveImgObj(imd, startCoord, reshape = false, usePerspect
     var img = new Image();
     img.src = (persData);
     let filename = join(__dirname, 'tmp-' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '.jpg');
-    console.log('writeFile start', );
+    console.log('writeFile start',);
     await writeFile(filename, await ImageDataToBlob(persData));
     console.log('writeFile', new Date().getTime() - startTime);
     let oImg = await addImageAsync(filename);
@@ -523,7 +523,7 @@ async function replaceImg(doc, placeValueMap, extras) {
             imd = await modOpacity(await getImageDataFromUrl(value), field.opacity || 1);
 
 
-
+        console.log('field', field.name);
         let modImd = await getPerpectiveImgObj(imd, field.points, type == 'image', field.name != 'background');
 
         renderCanvas.insertAt(modImd, field.hasOwnProperty('zIndex') ? field.zIndex : renderCanvas.getObjects().length);
