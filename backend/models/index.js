@@ -55,6 +55,7 @@ Document.hasMany(DocumentState, { foreignKey: "documentId" });
 
 async function init() {
   await Promise.all([Document].map(async (model) => await model.sync({ alter: true, force: true })));
+  await Promise.all([DocumentState].map(async (model) => await model.sync({ alter: true })));
   await populateTables();
   // await sequelize.sync({ alter: true, force: true });
 }
