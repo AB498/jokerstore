@@ -501,9 +501,11 @@ async function processExecutor() {
     processQueue.length && console.log("Processes in queue", processQueue.length);
     if (!processQueue.length) return;
     let proc = processQueue.pop();
-    let res = await proc.run();
-    models.DocumentState.update({ status: "completed", result: res, error: res.error }, { where: { id: proc.data.processId } });
-    console.log("Process completed", proc.data.processId, res);
+    (async () => {
+      let res = await proc.run();
+      models.DocumentState.update({ status: "completed", result: res, error: res.error }, { where: { id: proc.data.processId } });
+      console.log("Process completed", proc.data.processId, res);
+    })();
     return false;
   }, 1000);
 }
