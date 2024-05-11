@@ -625,6 +625,16 @@ let GeneratorPage = () => {
 
   }
 
+  function autoFill() {
+    if (!infoState.current.doc) return;
+    let data = {};
+    for (let i = 0; i < infoState.current.doc.data.fields.length; i++) {
+      let field = infoState.current.doc.data.fields[i];
+      data[field.name] = field.placeholder;
+    }
+    infoState.current.data = data;
+  }
+
   return (
     <div className="flex flex-col items-center w-full h-full ">
       <NavBar />
@@ -697,7 +707,8 @@ let GeneratorPage = () => {
                     <div className="text-2xl font-semibold">{infoState.current.doc.name}</div>
                     <div className="flex gap-2 py-2 border-t">
                       <CustomRadio data={["Male", "Female"]} />
-                      <CustomRadio data={["Scan", "Photo", "Raw"]} />
+                      <CustomRadio data={["Scan", "Photo", "Raw"]} /> 
+                      <div className="special-btn" onClick={() => autoFill()}>Auto Fill Fields</div>
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
