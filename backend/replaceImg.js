@@ -373,16 +373,20 @@ function getPolyVertices(polygon) {
     return (transformedPoints);
 }
 
+let clamp = (n, min, max) => Math.min(Math.max(n, min), max);
 
-async function getPerpectiveImgObj(imd, startCoord, reshape = false) {
+async function getPerpectiveImgObj(imd, startCoord, reshape = false, usePerspective = true) {
 
     let boundingRect = boundingRectForQuadrilateral(startCoord);
     let trueBoundingRect = trueBoundingRectForQuadrilateral(startCoord);
 
     // console.log('boundingRect', boundingRect);
     // let scaledCoords = 
-    let transform = offsetBy(startCoord, -boundingRect[0][0], -boundingRect[0][1])
-    // transform = getResizedRect(transform, (boundingRect[1][0] - boundingRect[0][0]) * 10, (boundingRect[3][1] - boundingRect[0][1]) * 10);
+    let transform = offsetBy(startCoord, -boundingRect[0][0], -boundingRect[0][1]);
+    // transform = getResizedRect(transform, clamp((boundingRect[1][0] - boundingRect[0][0]), 0, 200),
+    //     clamp((boundingRect[1][0] - boundingRect[0][0]), 0, 1000) / (boundingRect[1][0] - boundingRect[0][0]) * clamp((boundingRect[3][1] - boundingRect[0][1]), 0, 200),
+    // );
+    console.log('resize', (transform[1][0] - transform[0][0]), (transform[3][1] - transform[0][1]))
     let scale = (boundingRect[3][1] - boundingRect[0][1]) / imd.height;
     imd = await getResizedImageData(imd, scale * imd.width, scale * imd.height);
 
@@ -391,8 +395,9 @@ async function getPerpectiveImgObj(imd, startCoord, reshape = false) {
     else
         imd = await getResizedImageData(imd, (transform[1][0] - transform[0][0]), (transform[3][1] - transform[0][1]))
 
+    let startTime = new Date().getTime();
 
-    let persData = await drawPerspective(imd, transform);
+    let persData = usePerspective ? await drawPerspective(imd, transform) : imd;
 
     function getDat(imageData) {
         return new Promise(async (resolve) => {
@@ -413,7 +418,9 @@ async function getPerpectiveImgObj(imd, startCoord, reshape = false) {
     var img = new Image();
     img.src = (persData);
     let filename = join(__dirname, 'tmp-' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '.jpg');
+    console.log('writeFile start', );
     await writeFile(filename, await ImageDataToBlob(persData));
+    console.log('writeFile', new Date().getTime() - startTime);
     let oImg = await addImageAsync(filename);
     // console.log(filename )
     fs.unlinkSync(filename);
@@ -486,7 +493,9 @@ async function replaceImg(doc, placeValueMap, extras) {
 
     placeValueMap = Object.fromEntries(Object.entries(placeValueMap).map(([key, value]) => {
         return [key.toLowerCase(), value];
-    }))
+    }));
+
+    console.log('fields', doc.data.fields?.map(f => f.name))
     for (let field of doc.data.fields) {
         // renderCanvas.add(new fabric.Polygon(field.points.map((p) => ({ x: p[0], y: p[1] })), {
         //     fill: 'red',
@@ -503,7 +512,6 @@ async function replaceImg(doc, placeValueMap, extras) {
             value = mappedVal;
             type = 'text';
         }
-        console.log(field.name, value);
         if (!type || type == 'text')
             imd = await drawText(value, {
                 font: {
@@ -514,7 +522,10 @@ async function replaceImg(doc, placeValueMap, extras) {
         else if (type == 'image')
             imd = await modOpacity(await getImageDataFromUrl(value), field.opacity || 1);
 
-        let modImd = await getPerpectiveImgObj(imd, field.points, type == 'image');
+
+
+        let modImd = await getPerpectiveImgObj(imd, field.points, type == 'image', field.name != 'background');
+
         renderCanvas.insertAt(modImd, field.hasOwnProperty('zIndex') ? field.zIndex : renderCanvas.getObjects().length);
 
     }
@@ -528,12 +539,20 @@ async function replaceImg(doc, placeValueMap, extras) {
 
 
 
+    console.log('rendering');
     renderCanvas.renderAll();
+
+
+    let targetResolution = [clamp(boundary.width, 200, 2000), clamp(boundary.width, 200, 2000) / boundary.width * boundary.height];
+    console.log('resolution', [boundary.width, boundary.height]);
+    console.log('targetResolution', targetResolution);
+
     let resImd = await getImageDataFromUrl(renderCanvas.toDataURL({
         left: boundary.left,
         top: boundary.top,
         width: boundary.width,
-        height: boundary.height
+        height: boundary.height,
+        multiplier: targetResolution[0] / boundary.width,
     }));
 
 

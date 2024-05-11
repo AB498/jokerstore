@@ -927,7 +927,7 @@ let DocPreview = ({ id }) => {
   }, [id])
 
   let documentState = dynamicPoll(async () => {
-    cons('polling', ownId.current, uuid().slice(0,2));
+    cons('polling', ownId.current, uuid().slice(0, 2));
     if (!ownId.current) return null;
     try {
       let res = await (await fetch(`/api/special/generate-doc-status/${ownId.current}`)).json();
@@ -956,6 +956,7 @@ let DocPreview = ({ id }) => {
                   <div class="w-full h-full rounded center text-xl flex flex-col gap-4 grow ">
                     <Spinner />
                     <div>Generating...</div>
+                    <div>Status: {documentState.current.status}</div>
                   </div>
                 );
               else if (documentState.current.status == "failed") return <div class="w-full h-full rounded center text-xl">Failed!</div>;

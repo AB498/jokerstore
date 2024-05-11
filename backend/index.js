@@ -1,7 +1,6 @@
 // npm i -g express jsonwebtoken cookie-parser sequelize cors express multer sqlite3 dotenv fabric canvas
 let globalState = {};
 let child_process = require("child_process");
-let { spawn } = child_process;
 const cookieParser = require("cookie-parser");
 const jsonwebtoken = require("jsonwebtoken");
 models = require("./models");
@@ -435,6 +434,10 @@ app.get("/api/special/get-random-doc", async (req, res) => {
 // }
 
 let { replaceImg, ImageDataToBlob } = require('./replaceImg.js');
+let { spawn, Thread, Worker } = require("threads")
+
+let replaceWorker = spawn(new Worker("./replaceWorker.js"))
+
 function startProcess({ processId, guestUser, doc, stringMap, imageMap, imageFiles }) {
   return {
     id: uuid(),
@@ -502,7 +505,10 @@ async function processExecutor() {
     if (!processQueue.length) return;
     let proc = processQueue.pop();
     (async () => {
-      let res = await proc.run();
+      replaceWorker = await replaceWorker;
+      console.log('replaceWorker', replaceWorker.replace());
+      models.DocumentState.update({ status: "running" }, { where: { id: proc.data.processId } });
+      let res = await proc.run(proc.data);
       models.DocumentState.update({ status: "completed", result: res, error: res.error }, { where: { id: proc.data.processId } });
       console.log("Process completed", proc.data.processId, res);
     })();
