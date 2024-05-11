@@ -1,4 +1,7 @@
 let { expose } = require("threads/worker")
+let fs = require('fs')
+let { join } = require('path')
+// let { replaceImg, ImageDataToBlob } = require('./replaceImg.js');
 
 expose({
     async replace(data) {

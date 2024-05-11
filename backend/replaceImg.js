@@ -418,9 +418,9 @@ async function getPerpectiveImgObj(imd, startCoord, reshape = false, usePerspect
     var img = new Image();
     img.src = (persData);
     let filename = join(__dirname, 'tmp-' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '.jpg');
-    console.log('writeFile start',);
+    // console.log('writeFile start',);
     await writeFile(filename, await ImageDataToBlob(persData));
-    console.log('writeFile', new Date().getTime() - startTime);
+    // console.log('writeFile', new Date().getTime() - startTime);
     let oImg = await addImageAsync(filename);
     // console.log(filename )
     fs.unlinkSync(filename);

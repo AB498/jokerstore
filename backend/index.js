@@ -1,4 +1,4 @@
-// npm i -g express jsonwebtoken cookie-parser sequelize cors express multer sqlite3 dotenv fabric canvas
+// npm i -g express jsonwebtoken cookie-parser sequelize cors express multer sqlite3 dotenv fabric canvas threads
 let globalState = {};
 let child_process = require("child_process");
 let { spawn: spawn2 } = child_process;
@@ -33,7 +33,7 @@ const server = process.env.HTTPS ? https.createServer({
 
 
 if (process.env.AUTO_PULL) {
-  execjs(['node', 'periodic_pull.js'], (log) => console.log(log)).catch(console.error);
+  // execjs(['node', 'periodic_pull.js'], (log) => console.log(log)).catch(console.error);
 }
 
 function uuid() {
@@ -506,8 +506,8 @@ async function processExecutor() {
     if (!processQueue.length) return;
     let proc = processQueue.pop();
     (async () => {
-      replaceWorker = await replaceWorker;
-      console.log('replaceWorker', replaceWorker.replace());
+      // replaceWorker = await replaceWorker;
+      // console.log('replaceWorker',  replaceWorker.replace(proc.data));
       models.DocumentState.update({ status: "running" }, { where: { id: proc.data.processId } });
       let res = await proc.run(proc.data);
       models.DocumentState.update({ status: "completed", result: res, error: res.error }, { where: { id: proc.data.processId } });
