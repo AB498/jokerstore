@@ -512,7 +512,9 @@ async function processExecutor() {
       let res = await proc.run(proc.data);
       models.DocumentState.update({ status: "completed", result: res, error: res.error }, { where: { id: proc.data.processId } });
       console.log("Process completed", proc.data.processId, res);
-    })();
+    })().catch((err) => {
+      console.error(err);
+    });
     return false;
   }, 1000);
 }
