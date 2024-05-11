@@ -4,6 +4,10 @@
     "country": "United Kingdom",
     "price": 5,
     "data": {
+        "font":{
+            "name": "ocr10",
+            "color": "#303030"
+        },
         "template": {
             "bg": "uk_passport_bg.png",
             "cover": "uk_passport_cover.png",

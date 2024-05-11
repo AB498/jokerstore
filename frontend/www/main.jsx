@@ -198,7 +198,7 @@ let commonLabels = {
   dateofexpiry: "Date of Expiry",
   dateofbirth: "Date of Birth",
   name: "Name",
-  passportno: "Passport Number",
+  documentno: "Document Number",
   address: "Address",
   country: "Country",
   address1: "Address Line 1",
@@ -206,6 +206,8 @@ let commonLabels = {
   city: "City",
   authority: "Authority",
   code: "Code",
+  countrycode: "Country Code",
+  nationalitycode: "Nationality Code",
 }
 let commonPlaceholders = {
   doe: "02.05.2025",
@@ -220,7 +222,7 @@ let commonPlaceholders = {
   dateofexpiry: "02.05.2025",
   dateofbirth: "02.05.2025",
   name: "Name",
-  passportno: "123456789",
+  documentno: "123456789",
   address: "Address",
   country: "United Kingdom",
   address1: "Address Line 1",
@@ -228,6 +230,8 @@ let commonPlaceholders = {
   city: "City",
   authority: "DVLA",
   code: "GH1F3JE1HRV31",
+  countrycode: "GBR",
+  nationalitycode: "GBR",
 }
 
 function getCommonPlaceholder(label) {
@@ -259,6 +263,44 @@ function getCommonLabel(label) {
 
 }
 
+
+function formatDDMMYYYY(date) {
+  return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`
+}
+function getRandomValue(name) {
+  let randomGenerator = {
+    doe: () => formatDDMMYYYY(new Date(faker.date.future())),
+    doi: () => formatDDMMYYYY(new Date(faker.date.past())),
+    dob: () => formatDDMMYYYY(new Date(faker.date.past())),
+    surname: faker.person.lastName,
+    givenname: faker.person.firstName,
+    number: faker.string.numeric,
+    sex: faker.person.sexType,
+    nationality: () => faker.location.country(),
+    dateofissue: () => formatDDMMYYYY(new Date(faker.date.past())),
+    dateofexpiry: () => formatDDMMYYYY(new Date(faker.date.future())),
+    dateofbirth: () => formatDDMMYYYY(new Date(faker.date.past())),
+    name: faker.person.findName,
+    documentno: () => faker.string.numeric(9),
+    address: faker.location.streetAddress,
+    country: () => faker.location.country(),
+    address1: faker.location.streetAddress,
+    address2: faker.location.streetAddress,
+    city: faker.location.city,
+    authority: () => faker.location.countryCode('alpha-3'),
+    code: faker.string.numeric,
+    countrycode: () => faker.location.countryCode('alpha-3'),
+    nationalitycode: () => faker.location.countryCode('alpha-3'),
+  }
+
+  try {
+    return name && randomGenerator[name.toLowerCase()]?.();
+  } catch (error) {
+    console.log(error)
+    console.log(name, typeof name)
+    return null;
+  }
+}
 let CustomSelect = ({ label, data, onChange, value, className }) => {
   let selected = reactive(null);
   let modalOpen = reactive(0);
@@ -630,7 +672,7 @@ let GeneratorPage = () => {
     let data = {};
     for (let i = 0; i < infoState.current.doc.data.fields.length; i++) {
       let field = infoState.current.doc.data.fields[i];
-      data[field.name] = field.placeholder;
+      data[field.name] = getRandomValue(field.name) || field.placeholder;
     }
     infoState.current.data = data;
   }
@@ -707,7 +749,7 @@ let GeneratorPage = () => {
                     <div className="text-2xl font-semibold">{infoState.current.doc.name}</div>
                     <div className="flex gap-2 py-2 border-t">
                       <CustomRadio data={["Male", "Female"]} />
-                      <CustomRadio data={["Scan", "Photo", "Raw"]} /> 
+                      <CustomRadio data={["Scan", "Photo", "Raw"]} />
                       <div className="special-btn" onClick={() => autoFill()}>Auto Fill Fields</div>
                     </div>
 
@@ -772,7 +814,7 @@ let GeneratorPage = () => {
                             className={"form-input signature hidden"}
                             onChange={async (e) => {
                               let blob = e.target.files[0];
-                              blob = await ImageDataToBlob(await alterPixels(await removeWhiteBg(await getImageDataFromUrl(URL.createObjectURL(blob))), [{ r: 0, g: 0, b: 0, a: 200 }, { r: 100, g: 100, b: 100, a: 255 }], { r: 0, g: 0, b: 0, a: 255 }));
+                              blob = await ImageDataToBlob(await alterPixels(await removeWhiteBg(await getImageDataFromUrl(URL.createObjectURL(blob))), [{ r: 0, g: 0, b: 0, a: 200 }, { r: 255, g: 255, b: 255, a: 255 }], { r: 0, g: 0, b: 0, a: 255 }));
                               e.target.parentElement.parentElement.querySelector(".file-name").textContent = e.target.files[0].name;
                               e.target.parentElement.parentElement.parentElement.querySelector(".upload-image").src = URL.createObjectURL(blob);
                               uploadFiles.current["signature"] = blob;
@@ -784,7 +826,7 @@ let GeneratorPage = () => {
                         // form 1 to 15
                         let randNum = Math.floor(Math.random() * 15) + 1;
                         let blob = await downImage('signatures/' + randNum + '.jpg');
-                        blob = await ImageDataToBlob(await alterPixels(await removeWhiteBg(await getImageDataFromUrl(URL.createObjectURL(blob))), [{ r: 0, g: 0, b: 0, a: 200 }, { r: 100, g: 100, b: 100, a: 255 }], { r: 0, g: 0, b: 0, a: 255 }));
+                        blob = await ImageDataToBlob(await alterPixels(await removeWhiteBg(await getImageDataFromUrl(URL.createObjectURL(blob))), [{ r: 0, g: 0, b: 0, a: 200 }, { r: 255, g: 255, b: 255, a: 255 }], { r: 0, g: 0, b: 0, a: 255 }));
                         e.target.parentElement.querySelector(".form-input.signature").value = '';
                         e.target.parentElement.querySelector(".upload-image").src = URL.createObjectURL(blob);
                         uploadFiles.current["signature"] = blob;
@@ -885,10 +927,15 @@ let DocPreview = ({ id }) => {
   }, [id])
 
   let documentState = dynamicPoll(async () => {
-    cons(ownId.current);
+    cons('polling', ownId.current, uuid().slice(0,2));
     if (!ownId.current) return null;
-    let res = await (await fetch(`/api/special/generate-doc-status/${ownId.current}`)).json();
-    return res;
+    try {
+      let res = await (await fetch(`/api/special/generate-doc-status/${ownId.current}`)).json();
+      return res;
+    } catch (error) {
+      console.log('preview|generate-doc-status', error);
+      return null
+    }
   }); // result
   return (
     <div>

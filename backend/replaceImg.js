@@ -1,7 +1,15 @@
 let { fabric } = require('fabric');
-let { Image, createCanvas } = require('canvas');
+let { registerFont, Image, createCanvas } = require('canvas');
 let fs = require('fs')
 
+
+const writeFile = (path, data, opts = 'utf8') =>
+    new Promise((resolve, reject) => {
+        fs.writeFile(path, data, opts, (err) => {
+            if (err) reject(err)
+            else resolve()
+        })
+    })
 
 
 function offsetBy(rect, x, y) {
@@ -139,6 +147,10 @@ function ImageDataToBlob(imageData) {
 async function drawText(text, options) {
     var text_size = 150;
     let { maxWidth, font } = options || {};
+    let { name: fontName, color } = font || {};
+    if (fontName)
+        registerFont(join(__dirname, 'fonts', fontName + '.ttf'), { family: fontName });
+
     let textCanvas = createCanvas();
     //   textCanvas.style.border = "1px solid blue ";
     textCanvas.width = maxWidth || 20000;
@@ -146,8 +158,6 @@ async function drawText(text, options) {
     let textCtx = textCanvas.getContext("2d");
     // textCanvas.height = 100;
     textCtx.lineWidth = 4;
-    textCtx.strokeStyle = "#000000";
-    textCtx.fillStyle = "#abc";
 
     var rectHeight = text_size;
     var rectWidth = 530;
@@ -157,7 +167,7 @@ async function drawText(text, options) {
 
     let rect = [rectX, rectY, rectWidth, rectHeight];
 
-    var text_font = font?.name || "ocrb10";
+    var text_font = fontName || "ocrb10";
     var the_text = text || '-- no text --';
     textCtx.font = text_size + "px " + text_font;
     var textMetrics = textCtx.measureText(the_text);
@@ -182,7 +192,8 @@ async function drawText(text, options) {
 
     textCtx.textAlign = "center";
     textCtx.textBaseline = "middle";
-    textCtx.fillStyle = "#000000";
+    textCtx.strokeStyle = color || "#000000";
+    textCtx.fillStyle = color || "#000000";
 
     // document.body.appendChild(textCanvas);
     // textCanvas.width = actualWidth ;
@@ -402,7 +413,7 @@ async function getPerpectiveImgObj(imd, startCoord, reshape = false) {
     var img = new Image();
     img.src = (persData);
     let filename = join(__dirname, 'tmp-' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '.jpg');
-    fs.writeFileSync(filename, await ImageDataToBlob(persData));
+    await writeFile(filename, await ImageDataToBlob(persData));
     let oImg = await addImageAsync(filename);
     // console.log(filename )
     fs.unlinkSync(filename);
@@ -494,7 +505,12 @@ async function replaceImg(doc, placeValueMap, extras) {
         }
         console.log(field.name, value);
         if (!type || type == 'text')
-            imd = await drawText(value);
+            imd = await drawText(value, {
+                font: {
+                    name: field.font || doc.data.font?.name || 'ocr10',
+                    color: field.color || doc.data.font?.color || '#000000',
+                }
+            });
         else if (type == 'image')
             imd = await modOpacity(await getImageDataFromUrl(value), field.opacity || 1);
 
@@ -643,7 +659,7 @@ const { join } = require('path');
     let doc = JSON.parse(fs.readFileSync(join(__dirname, 'docs/uk_passport.json')));
     var res = await replaceImg(doc, { SURNAME: { type: 'text', value: 'TAYLOR' }, photo: { type: 'image', value: join(__dirname, 'no-image.png') } });
     console.log(res)
-    fs.writeFileSync('test.jpg', await ImageDataToBlob(res));
+    await writeFile('test.jpg', await ImageDataToBlob(res));
 
     // // console.log(res);
     // return
