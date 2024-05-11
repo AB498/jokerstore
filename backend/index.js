@@ -351,7 +351,7 @@ app.post("/api/special/generate-doc", upload.array("files", 10), async (req, res
   });
 
 
-  let { guestUser, id, slug,stringMap, imageMap } = req.body;
+  let { guestUser, id, slug, stringMap, imageMap } = req.body;
   let doc = id ? await models.Document.findOne({ where: { id } }) : await models.Document.findOne({ where: { slug } });
   let defaultStringMap = JSON.parse(fs.readFileSync(join(__dirname, 'docs', doc.slug + '.json'), 'utf8'));
   console.log('input', stringMap, imageMap)
@@ -368,7 +368,7 @@ app.post("/api/special/generate-doc", upload.array("files", 10), async (req, res
     val = imageMap[key];
     let filename = processedFiles[key] ? join('uploads', processedFiles[key]) : 'no-image.png';
     stringMap[val] = { type: 'image', value: join(__dirname, filename) }
-    console.log(' processedFiles[key]', filename)
+    console.log(' processedFiles[key]', val, filename)
   }
   //imagemap to stringmap
 

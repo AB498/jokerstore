@@ -1,3 +1,190 @@
+function ImageDataToBlob(imageData) {
+  let w = imageData.width;
+  let h = imageData.height;
+  let canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  let ctx = canvas.getContext("2d");
+  ctx.putImageData(imageData, 0, 0);
+
+  return new Promise((resolve) => {
+    canvas.toBlob(resolve);
+  });
+}
+
+function removeWhiteBg(imgd) {
+
+  let pix = imgd.data;
+  let newColor = { r: 0, g: 0, b: 0, a: 0 };
+
+  for (var i = 0, n = pix.length; i < n; i += 4) {
+    var r = pix[i],
+      g = pix[i + 1],
+      b = pix[i + 2];
+
+    // If its white then change it
+    if (r >= 200 && g >= 200 && b >= 200) {
+      // Change the white to whatever.
+      pix[i] = newColor.r;
+      pix[i + 1] = newColor.g;
+      pix[i + 2] = newColor.b;
+      pix[i + 3] = newColor.a;
+    }
+  }
+
+  return imgd;
+
+}
+function alterPixels(imgd, sourcePixelRange, targetPixel) {
+
+  let pix = imgd.data;
+  let newColor = targetPixel;
+
+  for (var i = 0, n = pix.length; i < n; i += 4) {
+    var r = pix[i],
+      g = pix[i + 1],
+      b = pix[i + 2],
+      a = pix[i + 3];
+
+    // If its white then change it
+    let condition = r >= sourcePixelRange[0].r && g >= sourcePixelRange[0].g && b >= sourcePixelRange[0].b && a >= sourcePixelRange[0].a
+      && r <= sourcePixelRange[1].r && g <= sourcePixelRange[1].g && b <= sourcePixelRange[1].b && a <= sourcePixelRange[1].a
+    if (condition) {      // Change the white to whatever.
+      pix[i] = newColor.r;
+      pix[i + 1] = newColor.g;
+      pix[i + 2] = newColor.b;
+      pix[i + 3] = newColor.a;
+    }
+  }
+
+  return imgd;
+
+}
+
+function getImageDataFromUrl(url) {
+  return new Promise((resolve) => {
+    const image = new Image();
+    image.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(image, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      resolve(imageData);
+    };
+    image.src = url;
+  });
+}
+
+function getImageFromBlob(imageBlob) {
+  return new Promise((resolve) => {
+    const image = new Image();
+    image.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(image, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      resolve(imageData);
+    };
+    image.src = URL.createObjectURL(imageBlob);
+  });
+}
+
+function getResizedImageData(imageData, width, height) {
+  return new Promise(async (resolve) => {
+    const image = new Image();
+    image.onload = () => {
+      let canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      let ctx = canvas.getContext("2d");
+      ctx.drawImage(image, 0, 0, width, height);
+      let resizedImageData = ctx.getImageData(0, 0, width, height);
+      resolve(resizedImageData);
+    };
+    image.src = URL.createObjectURL(new Blob([await ImageDataToBlob(imageData)], { type: "image/png" }));
+  });
+}
+function drawOnContext(ctx, imageData, opacity = 1) {
+  return new Promise(async (resolve) => {
+    let image = new Image();
+    image.onload = () => {
+      ctx.globalAlpha = opacity;
+
+      ctx.drawImage(image, ctx.canvas.width / 2 - imageData.width / 2, ctx.canvas.height / 2 - imageData.height / 2, imageData.width, imageData.height);
+      ctx.globalAlpha = 1;
+      resolve();
+    };
+    image.src = URL.createObjectURL(new Blob([await ImageDataToBlob(imageData)], { type: "image/png" }));
+  });
+}
+function drawText(text) {
+  var text_size = 50;
+
+  let textCanvas = document.createElement("canvas");
+  textCanvas.style.border = "1px solid blue ";
+  textCanvas.width = 700;
+  textCanvas.height = text_size;
+  let textCtx = textCanvas.getContext("2d");
+  // textCanvas.height = 100;
+  textCtx.lineWidth = 4;
+  textCtx.strokeStyle = "#000000";
+  textCtx.fillStyle = "#abc";
+
+  var rectHeight = text_size;
+  var rectWidth = 530;
+
+  var rectX = 0;
+  var rectY = 0;
+
+  let rect = [rectX, rectY, rectWidth, rectHeight];
+
+  var text_font = "Arial";
+  var the_text = text || "Some text";
+  textCtx.font = text_size + "px " + text_font;
+  var textMetrics = textCtx.measureText(the_text);
+  var actualHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent;
+  var actualWidth = textMetrics.actualBoundingBoxLeft + textMetrics.actualBoundingBoxRight;
+  var text_ratio = 1.1;
+  while (actualWidth * text_ratio > rectWidth || actualHeight * text_ratio > rectHeight) {
+    if (actualWidth * text_ratio > rectWidth) {
+      rectWidth++;
+    }
+
+    text_size = text_size - 1;
+    textCtx.font = text_size + "px " + text_font;
+    textMetrics = textCtx.measureText(the_text);
+    actualHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent;
+    actualWidth = textMetrics.actualBoundingBoxLeft + textMetrics.actualBoundingBoxRight;
+  }
+
+  // roundRect(textCtx, rectX, rectY, actualWidth, actualHeight, 0,);
+
+  textCtx.textAlign = "center";
+  textCtx.textBaseline = "middle";
+  textCtx.fillStyle = "#000000";
+
+  // document.body.appendChild(textCanvas);
+  // textCanvas.width = actualWidth ;
+  textCtx.fillText(the_text, rectX + actualWidth / 2, rectY + actualHeight / 2 + 10);
+
+  return textCtx.getImageData(0, 0, actualWidth, actualHeight + 10);
+}
+
+async function overlayImage(imageData, overlayImageData) {
+  const canvas = document.createElement("canvas");
+  canvas.width = imageData.width;
+  canvas.height = imageData.height;
+  const ctx = canvas.getContext("2d");
+  await drawOnContext(ctx, imageData);
+  await drawOnContext(ctx, await getResizedImageData(overlayImageData, canvas.width / 2, canvas.height / 2), 0.3);
+  return ctx.getImageData(0, 0, canvas.width, canvas.height);
+}
+
+
 let commonLabels = {
   doe: "Date of Expiry",
   doi: "Date of Issue",
@@ -418,8 +605,10 @@ let GeneratorPage = () => {
       let imgField = imgFields[i];
       // image i goes to placeholder imgField.name
       imageMap[i] = imgField.name;
-      cons('file', i, uploadFiles.current[imgField.name])
-      formData.append("files", uploadFiles.current[imgField.name]);
+      let file = uploadFiles.current[imgField.name] || await downImage('1x1.png');
+      cons('file', i, file)
+      formData.append("files", file);
+
 
     }
 
@@ -584,9 +773,11 @@ let GeneratorPage = () => {
                         // form 1 to 15
                         let randNum = Math.floor(Math.random() * 15) + 1;
                         let blob = await downImage('signatures/' + randNum + '.jpg');
+
+                        blob = await ImageDataToBlob(await alterPixels(await removeWhiteBg(await getImageDataFromUrl(URL.createObjectURL(blob))), [{ r: 0, g: 0, b: 0, a: 200 }, { r: 255, g: 255, b: 255, a: 255 }], { r: 0, g: 0, b: 0, a: 255 }));
                         e.target.parentElement.querySelector(".form-input.signature").value = '';
                         e.target.parentElement.querySelector(".upload-image").src = URL.createObjectURL(blob);
-                        uploadFiles.current["signature"] = blob;
+                        uploadFiles.current["signature"] = new File([blob], 'signature.png', { type: 'image/jpg' });;
                         console.log('blob', blob)
                       }}>Random</div>
                     </div>
